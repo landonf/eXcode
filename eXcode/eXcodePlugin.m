@@ -34,6 +34,9 @@
 
 @implementation eXcodePlugin
 
+/* In debug builds, we automatically reload the plugin whenever it is updated. */
+#if EX_BUILD_DEBUG
+
 static void updated_plugin_callback (ConstFSEventStreamRef streamRef, void *clientCallBackInfo, size_t numEvents, void *eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[]) {
     NSBundle *bundle = (__bridge NSBundle *) clientCallBackInfo;
     
@@ -67,11 +70,9 @@ static void updated_plugin_callback (ConstFSEventStreamRef streamRef, void *clie
     [[NSOperationQueue mainQueue] addOperations: @[unloadOp,reloadOp] waitUntilFinished: NO];
 }
 
-+ (void) pluginDidLoad: (NSBundle *) plugin {
-    EXLog(@"Plugin is active");
-    
++ (void) enablePluginReloader {
     NSBundle *bundle = [NSBundle bundleForClass: [self class]];
-
+    
     /* Watch for plugin changes, automatically reload. */
     FSEventStreamRef eventStream;
     {
@@ -87,6 +88,17 @@ static void updated_plugin_callback (ConstFSEventStreamRef streamRef, void *clie
         FSEventStreamScheduleWithRunLoop(eventStream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
         FSEventStreamStart(eventStream);
     }
+}
+
+#endif /* EX_BUILD_DEBUG */
+
+
++ (void) pluginDidLoad: (NSBundle *) plugin {
+    EXLog(@"Plugin is active");
+    
+#if EX_BUILD_DEBUG
+    [self enablePluginReloader];
+#endif
 }
 
 @end
