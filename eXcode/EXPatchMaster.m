@@ -55,7 +55,7 @@ static pl_trampoline_table *blockimp_table_stret = NULL;
 static pl_trampoline_table *blockimp_table = NULL;
 
 /**
- *
+ * Create a new EXPatchIMP block IMP trampoline.
  */
 static IMP ex_imp_implementationWithBlock (id block, IMP origIMP) {
     /* Allocate the appropriate trampoline type. */
@@ -77,19 +77,23 @@ static IMP ex_imp_implementationWithBlock (id block, IMP origIMP) {
     return (IMP) tramp->trampoline;
 }
 
+#if UNUSED
+
 /**
- *
+ * Return the backing block for an IMP trampoline.
  */
-void *ex_imp_getBlock (IMP anImp) {
+static void *ex_imp_getBlock (IMP anImp) {
     /* Fetch the config data and return the block reference. */
     void **config = pl_trampoline_data_ptr(anImp);
     return config[0];
 }
 
+#endif
+
 /**
- *
+ * Deallocate the IMP trampoline.
  */
-BOOL ex_imp_removeBlock (IMP anImp) {
+static BOOL ex_imp_removeBlock (IMP anImp) {
     /* Fetch the config data */
     void **config = pl_trampoline_data_ptr(anImp);
     struct Block_layout *bl = config[0];
@@ -118,7 +122,8 @@ BOOL ex_imp_removeBlock (IMP anImp) {
  * Patch the receiver's @a selector class method. The previously registered IMP may be fetched via EXPatchMaster::originalIMP:.
  *
  * @param selector The selector to patch.
- * @param replacementBlock The new implementation for @a selector.
+ * @param replacementBlock The new implementation for @a selector. The first parameter must be a pointer to EXPatchIMP; the
+ * remainder of the parameters must match the original method.
  *
  * @return Returns YES on success, or NO if @a selector is not a defined @a cls method.
  */
@@ -131,7 +136,8 @@ BOOL ex_imp_removeBlock (IMP anImp) {
  * Patch the receiver's @a selector instance method. The previously registered IMP may be fetched via EXPatchMaster::originalIMP:.
  *
  * @param selector The selector to patch.
- * @param replacementBlock The new implementation for @a selector.
+ * @param replacementBlock The new implementation for @a selector. The first parameter must be a pointer to EXPatchIMP; the
+ * remainder of the parameters must match the original method.
  *
  * @return Returns YES on success, or NO if @a selector is not a defined @a cls instance method.
  */
@@ -208,7 +214,8 @@ BOOL ex_imp_removeBlock (IMP anImp) {
  *
  * @param cls The class to patch.
  * @param selector The selector to patch.
- * @param replacementBlock The new implementation for @a selector.
+ * @param replacementBlock The new implementation for @a selector. The first parameter must be a pointer to EXPatchIMP; the
+ * remainder of the parameters must match the original method.
  *
  * @return Returns YES on success, or NO if @a selector is not a defined @a cls method.
  */
@@ -240,7 +247,7 @@ BOOL ex_imp_removeBlock (IMP anImp) {
                 Method m = class_getClassMethod(cls, selector);
                 method_setImplementation(m, oldIMP);
             }
-            imp_removeBlock(newIMP);
+            ex_imp_removeBlock(newIMP);
         } copy]];
     } OSSpinLockUnlock(&_lock);
 
@@ -252,7 +259,8 @@ BOOL ex_imp_removeBlock (IMP anImp) {
  *
  * @param cls The class to patch.
  * @param selector The selector to patch.
- * @param replacementBlock The new implementation for @a selector.
+ * @param replacementBlock The new implementation for @a selector. The first parameter must be a pointer to EXPatchIMP; the
+ * remainder of the parameters must match the original method.
  *
  * @return Returns YES on success, or NO if @a selector is not a defined @a cls instance method.
  */
@@ -284,7 +292,7 @@ BOOL ex_imp_removeBlock (IMP anImp) {
                     Method m = class_getInstanceMethod(cls, selector);
                     method_setImplementation(m, oldIMP);
                 }
-                imp_removeBlock(newIMP);
+                ex_imp_removeBlock(newIMP);
             } copy]];
         } OSSpinLockUnlock(&_lock);
     }

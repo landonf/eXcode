@@ -28,8 +28,14 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ * IMP patch state, as passed to a replacement block.
+ */
 typedef struct EXPatchIMP {
+    /** The original message target. */
     void *self;
+    
+    /** The original IMP (eg, the IMP prior to patching) */
     IMP origIMP;
 } EXPatchIMP;
 
