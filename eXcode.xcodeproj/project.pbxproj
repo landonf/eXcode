@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0527062D17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527062B17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.m */; };
+		0527062E17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0527062C17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib */; };
 		0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 0544E85617C9960100F961BD /* eXcodePlugin.m */; };
 		057F636017C991AE00406854 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057F635F17C991AE00406854 /* Cocoa.framework */; };
 		057F636A17C991AE00406854 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 057F636817C991AE00406854 /* InfoPlist.strings */; };
@@ -62,6 +64,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0527062A17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXViewAnalyzerWindowController.h; sourceTree = "<group>"; };
+		0527062B17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXViewAnalyzerWindowController.m; sourceTree = "<group>"; };
+		0527062C17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EXViewAnalyzerWindowController.xib; sourceTree = "<group>"; };
 		0544E85517C9960100F961BD /* eXcodePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eXcodePlugin.h; sourceTree = "<group>"; };
 		0544E85617C9960100F961BD /* eXcodePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eXcodePlugin.m; sourceTree = "<group>"; };
 		057F635C17C991AE00406854 /* eXcode.xcplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = eXcode.xcplugin; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,6 +109,9 @@
 		0527062717CA8EF500E6A5D8 /* View Analyzer */ = {
 			isa = PBXGroup;
 			children = (
+				0527062A17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.h */,
+				0527062B17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.m */,
+				0527062C17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib */,
 			);
 			name = "View Analyzer";
 			sourceTree = "<group>";
@@ -265,6 +273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				057F636A17C991AE00406854 /* InfoPlist.strings in Resources */,
+				0527062E17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +290,7 @@
 				05CF529617C9BFD7009FB820 /* EXPatchMaster.m in Sources */,
 				05E55C5A17C9D79900BC8510 /* blockimp_x86_64.tramp in Sources */,
 				05E55C5C17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp in Sources */,
+				0527062D17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
