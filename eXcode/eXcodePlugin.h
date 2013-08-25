@@ -26,7 +26,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
 
 extern NSString *EXPluginUnloadNotification;
 

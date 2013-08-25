@@ -37,7 +37,19 @@ typedef struct EXPatchIMP {
     
     /** The original IMP (eg, the IMP prior to patching) */
     IMP origIMP;
+
+    /** The original SEL. */
+    SEL selector;
 } EXPatchIMP;
+
+/**
+ * Forward a message received by a EXPatchMaster patch block.
+ *
+ * @param patch The EXPatchIMP patch argument.
+ * @param func_type The function type to which the IMP should be cast.
+ * @param ... All method arguments (Do not include self or _cmd).
+ */
+#define EXPatchIMPFoward(patch, func_type, ...) ((func_type)patch->origIMP)((__bridge id) patch->self, patch->selector, ##__VA_ARGS__)
 
 @interface NSObject (EXPatchMaster)
 

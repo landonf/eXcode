@@ -53,6 +53,10 @@ asm << 'EOF'
         movq   0x10(%r11), %rdi
         movq   %rdi, 0x8(%rsp)
 
+        // Load the original SEL from the config page, and move to the third struct position
+        movq   0x18(%r11), %rdi
+        movq   %rdi, 0x10(%rsp)
+
         // Move our struct to the second parameter, overwriting IMP
         movq   %rsp, %rsi
         

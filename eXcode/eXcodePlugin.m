@@ -111,11 +111,10 @@ static void updated_plugin_callback (ConstFSEventStreamRef streamRef, void *clie
 #if EX_BUILD_DEBUG
     [self enablePluginReloader];
 #endif
-    
-    [XCPluginManager ex_patchInstanceSelector: @selector(loadPluginBundle:) withReplacementBlock: ^(EXPatchIMP *patch, NSBundle *bundle) {
-        NSLog(@"Inserted a patch into loadPluginBundle:!");
-        BOOL (*i)(void *self, SEL sel, NSBundle *bundle) = (void *) patch->origIMP;
-        return i(patch->self, @selector(loadPluginBundle:), bundle);
+
+    [NSView ex_patchInstanceSelector: @selector(displayIfNeeded) withReplacementBlock: ^(EXPatchIMP *patch) {
+        NSLog(@"ON DISPLAY");
+        EXPatchIMPFoward(patch, void (*)(id, SEL));
     }];
 }
 

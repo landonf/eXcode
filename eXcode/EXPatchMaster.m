@@ -57,7 +57,7 @@ static pl_trampoline_table *blockimp_table = NULL;
 /**
  * Create a new EXPatchIMP block IMP trampoline.
  */
-static IMP ex_imp_implementationWithBlock (id block, IMP origIMP) {
+static IMP ex_imp_implementationWithBlock (id block, SEL selector, IMP origIMP) {
     /* Allocate the appropriate trampoline type. */
     pl_trampoline *tramp;
     struct Block_layout *bl = (__bridge struct Block_layout *) block;
@@ -72,7 +72,8 @@ static IMP ex_imp_implementationWithBlock (id block, IMP origIMP) {
     config[0] = (__bridge void *) [block copy];
     config[1] = tramp;
     config[2] = origIMP;
-    
+    config[3] = selector;
+
     /* Return the function pointer. */
     return (IMP) tramp->trampoline;
 }
@@ -226,7 +227,7 @@ static BOOL ex_imp_removeBlock (IMP anImp) {
     
     /* Insert the new implementation */
     IMP oldIMP = method_getImplementation(m);
-    IMP newIMP = ex_imp_implementationWithBlock(replacementBlock, oldIMP);
+    IMP newIMP = ex_imp_implementationWithBlock(replacementBlock, selector, oldIMP);
 
     if (!class_addMethod(object_getClass(cls), selector, newIMP, method_getTypeEncoding(m))) {
         /* Method already exists in subclass, we just need to swap the IMP */
@@ -275,7 +276,7 @@ static BOOL ex_imp_removeBlock (IMP anImp) {
 
         /* Insert the new implementation */
         IMP oldIMP = method_getImplementation(m);
-        IMP newIMP = ex_imp_implementationWithBlock(replacementBlock, oldIMP);
+        IMP newIMP = ex_imp_implementationWithBlock(replacementBlock, selector, oldIMP);
         
         if (!class_addMethod(cls, selector, newIMP, method_getTypeEncoding(m))) {
             /* Method already exists in subclass, we just need to swap the IMP */

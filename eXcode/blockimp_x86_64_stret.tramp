@@ -52,7 +52,11 @@ asm << 'EOF'
         movq   0x10(%r11), %rdi
         movq   %rdi, 0x8(%rsp)
 
-        // Move 'self' to the third parameter, overwriting IMP
+        // Load the original SEL from the config page, and move to the third struct position
+        movq   0x18(%r11), %rdi
+        movq   %rdi, 0x10(%rsp)
+
+        // Move our struct to the third parameter, overwriting IMP
         movq   %rsp, %rdx
         
         // Load the block reference from the config page, and move to the second parameter
