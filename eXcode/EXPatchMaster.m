@@ -277,7 +277,7 @@ static BOOL ex_imp_removeBlock (IMP anImp) {
         IMP oldIMP = method_getImplementation(m);
         IMP newIMP = ex_imp_implementationWithBlock(replacementBlock, oldIMP);
         
-        if (!class_addMethod(object_getClass(cls), selector, newIMP, method_getTypeEncoding(m))) {
+        if (!class_addMethod(cls, selector, newIMP, method_getTypeEncoding(m))) {
             /* Method already exists in subclass, we just need to swap the IMP */
             method_setImplementation(m, newIMP);
         }
