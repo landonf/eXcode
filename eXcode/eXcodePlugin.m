@@ -27,6 +27,7 @@
  */
 
 #import "eXcodePlugin.h"
+#import "DevToolsCore/XCPluginManager.h"
 
 @implementation eXcodePlugin
 

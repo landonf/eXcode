@@ -10,7 +10,23 @@
 		0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 0544E85617C9960100F961BD /* eXcodePlugin.m */; };
 		057F636017C991AE00406854 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057F635F17C991AE00406854 /* Cocoa.framework */; };
 		057F636A17C991AE00406854 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 057F636817C991AE00406854 /* InfoPlist.strings */; };
+		05CF528D17C9AEF6009FB820 /* DevToolsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */; };
+		05CF528E17C9AF10009FB820 /* DevToolsCore.framework in Sources */ = {isa = PBXBuildFile; fileRef = 05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		05E55C5417C9ACDF00BC8510 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.framework";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/$(INPUT_FILE_BASE).h",
+			);
+			script = "mkdir -p \"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}\"\n${SRCROOT}/bin/class-dump --arch \"${CURRENT_ARCH}\" -H \"${INPUT_FILE_PATH}\" -o \"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}\"";
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
 		0544E85517C9960100F961BD /* eXcodePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eXcodePlugin.h; sourceTree = "<group>"; };
@@ -22,6 +38,8 @@
 		057F636417C991AE00406854 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		057F636717C991AE00406854 /* eXcode-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "eXcode-Info.plist"; sourceTree = "<group>"; };
 		057F636917C991AE00406854 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DevToolsCore.framework; path = ../OtherFrameworks/DevToolsCore.framework; sourceTree = DEVELOPER_DIR; };
+		05CF528F17C9B123009FB820 /* NSObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSObject.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +48,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				057F636017C991AE00406854 /* Cocoa.framework in Frameworks */,
+				05CF528D17C9AEF6009FB820 /* DevToolsCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				057F636517C991AE00406854 /* eXcode */,
+				05CF528917C9AEA3009FB820 /* Private Frameworks */,
 				057F635E17C991AE00406854 /* Frameworks */,
 				057F635D17C991AE00406854 /* Products */,
 			);
@@ -91,6 +111,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		05CF528917C9AEA3009FB820 /* Private Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */,
+				05CF528F17C9B123009FB820 /* NSObject.h */,
+			);
+			path = "Private Frameworks";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -103,6 +132,7 @@
 				057F635A17C991AE00406854 /* Resources */,
 			);
 			buildRules = (
+				05E55C5417C9ACDF00BC8510 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -153,6 +183,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05CF528E17C9AF10009FB820 /* DevToolsCore.framework in Sources */,
 				0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -245,6 +276,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/landonf/Documents/Code/Personal/eXcode,
+					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/OtherFrameworks",
+				);
 				INFOPLIST_FILE = "eXcode/eXcode-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -256,6 +292,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/landonf/Documents/Code/Personal/eXcode,
+					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/OtherFrameworks",
+				);
 				INFOPLIST_FILE = "eXcode/eXcode-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				PRODUCT_NAME = "$(TARGET_NAME)";
