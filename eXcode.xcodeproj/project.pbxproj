@@ -16,6 +16,8 @@
 		05CF529617C9BFD7009FB820 /* EXPatchMaster.m in Sources */ = {isa = PBXBuildFile; fileRef = 05CF529517C9BFD7009FB820 /* EXPatchMaster.m */; };
 		05CF529F17C9D5C0009FB820 /* PLBlockIMP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CF529E17C9D5C0009FB820 /* PLBlockIMP.framework */; };
 		05E55C5717C9D60D00BC8510 /* PLBlockIMP.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05CF529E17C9D5C0009FB820 /* PLBlockIMP.framework */; };
+		05E55C5A17C9D79900BC8510 /* blockimp_x86_64.tramp in Sources */ = {isa = PBXBuildFile; fileRef = 05E55C5917C9D79900BC8510 /* blockimp_x86_64.tramp */; };
+		05E55C5C17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp in Sources */ = {isa = PBXBuildFile; fileRef = 05E55C5B17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -29,6 +31,19 @@
 				"$(DERIVED_FILES_DIR)/$(CURRENT_ARCH)/$(INPUT_FILE_BASE)/header-stamp.h",
 			);
 			script = "STAMP=\"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}/header-stamp.h\"\nif [ \"${STAMP}\" -nt \"${INPUT_FILE_PATH}\" ]; then\n    exit 0\nfi\n\nmkdir -p \"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}\"\n${SRCROOT}/bin/class-dump --arch \"${CURRENT_ARCH}\" -H \"${INPUT_FILE_PATH}\" -o \"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}\"\ntouch \"${STAMP}\"";
+		};
+		05E55C5817C9D6FA00BC8510 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.tramp";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"${DERIVED_FILE_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.h",
+				"${DERIVED_FILE_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}_config.c",
+				"${DERIVED_FILE_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}.s",
+			);
+			script = "OUTPUT_DIR=\"${DERIVED_FILE_DIR}/${CURRENT_ARCH}/\"\nmkdir -p \"${OUTPUT_DIR}\"\n\npushd \"$(dirname \"${INPUT_FILE_PATH}\")\" >/dev/null\n\"${SRCROOT}/Dependencies/PLBlockIMP.framework/Versions/Current/Resources/gentramp.sh\" \"${OUTPUT_DIR}\"\npopd >/dev/null";
 		};
 /* End PBXBuildRule section */
 
@@ -67,6 +82,9 @@
 		05CF529A17C9D159009FB820 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05CF529D17C9D586009FB820 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05CF529E17C9D5C0009FB820 /* PLBlockIMP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PLBlockIMP.framework; sourceTree = "<group>"; };
+		05E55C5917C9D79900BC8510 /* blockimp_x86_64.tramp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = blockimp_x86_64.tramp; sourceTree = "<group>"; };
+		05E55C5B17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = blockimp_x86_64_stret.tramp; sourceTree = "<group>"; };
+		05E55C5D17C9D96C00BC8510 /* EXBlockLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EXBlockLayout.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +176,9 @@
 			children = (
 				05CF529417C9BFD7009FB820 /* EXPatchMaster.h */,
 				05CF529517C9BFD7009FB820 /* EXPatchMaster.m */,
+				05E55C5D17C9D96C00BC8510 /* EXBlockLayout.h */,
+				05E55C5917C9D79900BC8510 /* blockimp_x86_64.tramp */,
+				05E55C5B17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp */,
 			);
 			name = "Runtime Patching";
 			sourceTree = "<group>";
@@ -194,6 +215,7 @@
 				05E55C5617C9D5F800BC8510 /* Copy Frameworks */,
 			);
 			buildRules = (
+				05E55C5817C9D6FA00BC8510 /* PBXBuildRule */,
 				05E55C5417C9ACDF00BC8510 /* PBXBuildRule */,
 			);
 			dependencies = (
@@ -249,6 +271,8 @@
 				05CF528E17C9AF10009FB820 /* DevToolsCore.framework in Sources */,
 				0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */,
 				05CF529617C9BFD7009FB820 /* EXPatchMaster.m in Sources */,
+				05E55C5A17C9D79900BC8510 /* blockimp_x86_64.tramp in Sources */,
+				05E55C5C17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,6 +294,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -308,6 +333,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;

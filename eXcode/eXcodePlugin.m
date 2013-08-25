@@ -112,14 +112,11 @@ static void updated_plugin_callback (ConstFSEventStreamRef streamRef, void *clie
     [self enablePluginReloader];
 #endif
     
-    typedef id (*origIMPFunction)(id, SEL, NSBundle *bundle);
-
-    __block origIMPFunction origIMP = NULL;
-    [XCPluginManager ex_patchInstanceSelector: @selector(loadPluginBundle:) originalIMP: (IMP *) &origIMP withReplacementBlock: ^(id self, NSBundle *bundle) {
-        NSLog(@"Inserted a patch (orig=%p)!", origIMP);
-        return origIMP(self, @selector(loadPluginBundle:), bundle);
+    [XCPluginManager ex_patchInstanceSelector: @selector(loadPluginBundle:) withReplacementBlock: ^(EXPatchIMP *patch, NSBundle *bundle) {
+        NSLog(@"Inserted a patch into loadPluginBundle:!");
+        BOOL (*i)(void *self, SEL sel, NSBundle *bundle) = (void *) patch->origIMP;
+        return i(patch->self, @selector(loadPluginBundle:), bundle);
     }];
-    NSLog(@"MYORG: %p", origIMP);
 }
 
 @end

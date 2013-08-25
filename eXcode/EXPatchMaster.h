@@ -28,10 +28,15 @@
 
 #import <Foundation/Foundation.h>
 
+typedef struct EXPatchIMP {
+    void *self;
+    IMP origIMP;
+} EXPatchIMP;
+
 @interface NSObject (EXPatchMaster)
 
-+ (BOOL) ex_patchSelector: (SEL) selector originalIMP: (IMP *) originalIMP withReplacementBlock: (id) replacementBlock;
-+ (BOOL) ex_patchInstanceSelector: (SEL) selector originalIMP: (IMP *) originalIMP withReplacementBlock: (id) replacementBlock;
++ (BOOL) ex_patchSelector: (SEL) selector withReplacementBlock: (id) replacementBlock;
++ (BOOL) ex_patchInstanceSelector: (SEL) selector withReplacementBlock: (id) replacementBlock;
 
 @end
 
@@ -39,7 +44,7 @@
 
 + (instancetype) master;
 
-- (BOOL) patchClass: (Class) cls selector: (SEL) selector originalIMP: (IMP *) originalIMP replacementBlock: (id) replacementBlock;
-- (BOOL) patchInstancesWithClass: (Class) cls selector: (SEL) selector originalIMP: (IMP *) originalIMP replacementBlock: (id) replacementBlock;
+- (BOOL) patchClass: (Class) cls selector: (SEL) selector replacementBlock: (id) replacementBlock;
+- (BOOL) patchInstancesWithClass: (Class) cls selector: (SEL) selector replacementBlock: (id) replacementBlock;
 
 @end

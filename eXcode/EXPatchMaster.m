@@ -31,7 +31,83 @@
 #import "EXPatchMaster.h"
 #import "EXLog.h"
 
+#define PL_BLOCKIMP_PRIVATE 1 // Required for the unsupported trampoline API
+#import <PLBlockIMP/trampoline_table.h>
+
+#import "EXBlockLayout.h"
+
 #import <objc/runtime.h>
+
+#ifdef __x86_64__
+#include "blockimp_x86_64.h"
+#include "blockimp_x86_64_stret.h"
+#else
+#error Unsupported Architecture
+#endif
+
+/* Global lock for our mutable trampoline state. Must be held when accessing the trampoline tables. */
+static pthread_mutex_t blockimp_lock = PTHREAD_MUTEX_INITIALIZER;
+
+/* Trampoline tables for objc_msgSend_stret() dispatch. */
+static pl_trampoline_table *blockimp_table_stret = NULL;
+
+/* Trampoline tables for objc_msgSend() dispatch. */
+static pl_trampoline_table *blockimp_table = NULL;
+
+/**
+ *
+ */
+static IMP ex_imp_implementationWithBlock (id block, IMP origIMP) {
+    /* Allocate the appropriate trampoline type. */
+    pl_trampoline *tramp;
+    struct Block_layout *bl = (__bridge struct Block_layout *) block;
+    if (bl->flags & BLOCK_USE_STRET) {
+        tramp = pl_trampoline_alloc(&ex_blockimp_patch_table_stret_page_config, &blockimp_lock, &blockimp_table_stret);
+    } else {
+        tramp = pl_trampoline_alloc(&ex_blockimp_patch_table_page_config, &blockimp_lock, &blockimp_table);
+    }
+    
+    /* Configure the trampoline */
+    void **config = pl_trampoline_data_ptr(tramp->trampoline);
+    config[0] = (__bridge void *) [block copy];
+    config[1] = tramp;
+    config[2] = origIMP;
+    
+    /* Return the function pointer. */
+    return (IMP) tramp->trampoline;
+}
+
+/**
+ *
+ */
+void *ex_imp_getBlock (IMP anImp) {
+    /* Fetch the config data and return the block reference. */
+    void **config = pl_trampoline_data_ptr(anImp);
+    return config[0];
+}
+
+/**
+ *
+ */
+BOOL ex_imp_removeBlock (IMP anImp) {
+    /* Fetch the config data */
+    void **config = pl_trampoline_data_ptr(anImp);
+    struct Block_layout *bl = config[0];
+    pl_trampoline *tramp = config[1];
+    
+    /* Drop the trampoline allocation */
+    if (bl->flags & BLOCK_USE_STRET) {
+        pl_trampoline_free(&blockimp_lock, &blockimp_table_stret, tramp);
+    } else {
+        pl_trampoline_free(&blockimp_lock, &blockimp_table, tramp);
+    }
+    
+    /* Release the block */
+    CFRelease(config[0]);
+    
+    // TODO - what does this return value mean?
+    return YES;
+}
 
 /**
  * Runtime method patching support for NSObject. These are implemented via EXPatchMaster.
@@ -42,13 +118,12 @@
  * Patch the receiver's @a selector class method. The previously registered IMP may be fetched via EXPatchMaster::originalIMP:.
  *
  * @param selector The selector to patch.
- * @param originalIMP[out] If non-NULL, the previous method IMP will be provided.
  * @param replacementBlock The new implementation for @a selector.
  *
  * @return Returns YES on success, or NO if @a selector is not a defined @a cls method.
  */
-+ (BOOL) ex_patchSelector: (SEL) selector originalIMP: (IMP *) originalIMP withReplacementBlock: (id) replacementBlock {
-    return [[EXPatchMaster master] patchClass: [self class] selector: selector originalIMP: originalIMP  replacementBlock: replacementBlock];
++ (BOOL) ex_patchSelector: (SEL) selector withReplacementBlock: (id) replacementBlock {
+    return [[EXPatchMaster master] patchClass: [self class] selector: selector replacementBlock: replacementBlock];
 
 }
 
@@ -56,13 +131,12 @@
  * Patch the receiver's @a selector instance method. The previously registered IMP may be fetched via EXPatchMaster::originalIMP:.
  *
  * @param selector The selector to patch.
- * @param originalIMP[out] If non-NULL, the previous method IMP will be provided.
  * @param replacementBlock The new implementation for @a selector.
  *
  * @return Returns YES on success, or NO if @a selector is not a defined @a cls instance method.
  */
-+ (BOOL) ex_patchInstanceSelector: (SEL) selector originalIMP: (IMP *) originalIMP withReplacementBlock: (id) replacementBlock {
-    return [[EXPatchMaster master] patchInstancesWithClass: [self class] selector: selector originalIMP: originalIMP replacementBlock: replacementBlock];
++ (BOOL) ex_patchInstanceSelector: (SEL) selector withReplacementBlock: (id) replacementBlock {
+    return [[EXPatchMaster master] patchInstancesWithClass: [self class] selector: selector replacementBlock: replacementBlock];
 }
 
 @end
@@ -87,6 +161,7 @@
     NSMutableArray *_restoreBlocks;
 }
 
+
 /**
  * Return the default patch master.
  */
@@ -100,6 +175,18 @@
     return m;
 }
 
+/* Handle bundle unload */
+- (void) handleUnloadNotification: (NSNotification *) notification {
+    EXLog(@"Unloading all patches");
+    
+    /* Unpatch everything. */
+    for (void (^b)(void) in _restoreBlocks)
+        b();
+
+    /* Remove ourself as an observer. */
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
 - (instancetype) init {
     if ((self = [super init]) == nil)
         return nil;
@@ -111,17 +198,7 @@
     _lock = OS_SPINLOCK_INIT;
 
     /* Handle unload */
-    [[NSNotificationCenter defaultCenter] addObserverForName: EXPluginUnloadNotification object: nil queue: [NSOperationQueue mainQueue] usingBlock: ^(NSNotification *note) {
-        /* We only care about our own bundle */
-        if (![[note object] isEqual: [NSBundle bundleForClass: [self class]]])
-            return;
-        
-        EXLog(@"Unloading all patches!");
-        
-        /* Unpatch everything. */
-        for (void (^b)(void) in _restoreBlocks)
-            b();
-    }];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleUnloadNotification:) name: EXPluginUnloadNotification object: [NSBundle bundleForClass: [self class]]];
 
     return self;
 }
@@ -131,23 +208,18 @@
  *
  * @param cls The class to patch.
  * @param selector The selector to patch.
- * @param originalIMP[out] If non-NULL, the previous method IMP will be provided.
  * @param replacementBlock The new implementation for @a selector.
  *
  * @return Returns YES on success, or NO if @a selector is not a defined @a cls method.
  */
-- (BOOL) patchClass: (Class) cls selector: (SEL) selector originalIMP: (IMP *) originalIMP replacementBlock: (id) replacementBlock {
+- (BOOL) patchClass: (Class) cls selector: (SEL) selector replacementBlock: (id) replacementBlock {
     Method m = class_getClassMethod(cls, selector);
     if (m == NULL)
         return NO;
-
-    /* Provide the old implementation; this needs to occur *before* the newIMP could possibly be called */
-    IMP oldIMP = method_getImplementation(m);
-    if (originalIMP != NULL)
-        *originalIMP = oldIMP;
     
     /* Insert the new implementation */
-    IMP newIMP = imp_implementationWithBlock(replacementBlock);
+    IMP oldIMP = method_getImplementation(m);
+    IMP newIMP = ex_imp_implementationWithBlock(replacementBlock, oldIMP);
     method_setImplementation(m, newIMP);
 
     /* If the method has already been patched once, we don't need to add another restore block */
@@ -180,24 +252,19 @@
  *
  * @param cls The class to patch.
  * @param selector The selector to patch.
- * @param originalIMP[out] If non-NULL, the previous method IMP will be provided.
  * @param replacementBlock The new implementation for @a selector.
  *
  * @return Returns YES on success, or NO if @a selector is not a defined @a cls instance method.
  */
-- (BOOL) patchInstancesWithClass: (Class) cls selector: (SEL) selector originalIMP: (IMP *) originalIMP replacementBlock: (id) replacementBlock {
+- (BOOL) patchInstancesWithClass: (Class) cls selector: (SEL) selector replacementBlock: (id) replacementBlock {
     @autoreleasepool {
         Method m = class_getInstanceMethod(cls, selector);
         if (m == NULL)
             return NO;
 
-        /* Provide the old implementation; this needs to occur *before* the newIMP could possibly be called */
-        IMP oldIMP = method_getImplementation(m);
-        if (originalIMP != NULL)
-            *originalIMP = oldIMP;
-
         /* Insert the new implementation */
-        IMP newIMP = imp_implementationWithBlock(replacementBlock);
+        IMP oldIMP = method_getImplementation(m);
+        IMP newIMP = ex_imp_implementationWithBlock(replacementBlock, oldIMP);
         method_setImplementation(m, newIMP);
 
         OSSpinLockLock(&_lock); {
