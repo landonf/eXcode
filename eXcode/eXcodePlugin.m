@@ -27,12 +27,45 @@
  */
 
 #import "eXcodePlugin.h"
+
+#import "DevToolsCore/header-stamp.h" // Xcode dependency hack
 #import "DevToolsCore/XCPluginManager.h"
 
 @implementation eXcodePlugin
 
+static void updated_plugin_callback (ConstFSEventStreamRef streamRef, void *clientCallBackInfo, size_t numEvents, void *eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[]) {
+    NSBundle *bundle = (__bridge NSBundle *) clientCallBackInfo;
+    
+    /* TODO: Dispatch a synchronous "STOP EVERYTHING" notification */
+
+    /* Our code will no longer exist once the bundle is unloaded; we can't simply unload the bundle here, as the process will crash once it returns */
+    NSLog(@"Plugin was updated, reloading");
+    FSEventStreamStop((FSEventStreamRef) streamRef);
+
+    [bundle performSelector: @selector(unload) withObject: nil afterDelay: 0.0];
+    [[XCPluginManager sharedPluginManager] performSelector: @selector(loadPluginBundle:) withObject: bundle afterDelay: 1.0f];
+}
+
 + (void) pluginDidLoad: (NSBundle *) plugin {
     NSLog(@"Plugin is active");
+    
+    NSBundle *bundle = [NSBundle bundleForClass: [self class]];
+
+    /* Watch for plugin changes, automatically reload. */
+    FSEventStreamRef eventStream;
+    {
+        NSArray *directories = @[[bundle bundlePath]];
+        FSEventStreamContext ctx = {
+            .version = 0,
+            .info = (__bridge void *) bundle,
+            .retain = CFRetain,
+            .release = CFRelease,
+            .copyDescription = CFCopyDescription
+        };
+        eventStream = FSEventStreamCreate(NULL, &updated_plugin_callback, &ctx, (__bridge CFArrayRef) directories, kFSEventStreamEventIdSinceNow, 0.0, kFSEventStreamCreateFlagUseCFTypes);
+        FSEventStreamScheduleWithRunLoop(eventStream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+        FSEventStreamStart(eventStream);
+    }
 }
 
 @end
