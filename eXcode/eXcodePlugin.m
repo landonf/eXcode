@@ -32,6 +32,17 @@
 #import "DevToolsCore/header-stamp.h" // Xcode dependency hack
 #import "DevToolsCore/XCPluginManager.h"
 
+#import "EXPatchMaster.h"
+
+/**
+ * Notification sent synchronously when the eXcode plugin is to be unloaded. Listeners must immediately deregister
+ * any dangling references that may be left after a plugin unload.
+ *
+ * The object associated with the notification will be the bundle to be unloaded. Listeners may use this to determine
+ * whether their bundle is about to be unloaded.
+ */
+NSString *EXPluginUnloadNotification = @"EXPluginUnloadNotification";
+
 @implementation eXcodePlugin
 
 /* In debug builds, we automatically reload the plugin whenever it is updated. */
@@ -47,8 +58,9 @@ static void updated_plugin_callback (ConstFSEventStreamRef streamRef, void *clie
 
     EXLog(@"Plugin was updated, reloading");
     
-    /* TODO: Dispatch a synchronous "STOP EVERYTHING" notification */
-    
+    /* Dispatch plugin unload notification */
+    [[NSNotificationCenter defaultCenter] postNotificationName: EXPluginUnloadNotification object: bundle];
+
     /* We'll re-register for events when the plugin reloads */
     FSEventStreamStop((FSEventStreamRef) streamRef);
 
@@ -59,12 +71,12 @@ static void updated_plugin_callback (ConstFSEventStreamRef streamRef, void *clie
      * to enforce the correct ordering of the operations.
      */
     NSInvocationOperation *unloadOp = [[NSInvocationOperation alloc] initWithTarget: bundle
-                                                                            selector: @selector(unload)
+                                                                           selector: @selector(unload)
                                                                              object: nil];
     
     NSInvocationOperation *reloadOp = [[NSInvocationOperation alloc] initWithTarget: [XCPluginManager sharedPluginManager]
-                                                                           selector:@selector(findAndLoadPlugins)
-                                                                             object:nil];
+                                                                           selector: @selector(loadPluginBundle:)
+                                                                             object: bundle];
     [reloadOp addDependency: unloadOp];
 
     [[NSOperationQueue mainQueue] addOperations: @[unloadOp,reloadOp] waitUntilFinished: NO];
@@ -99,6 +111,15 @@ static void updated_plugin_callback (ConstFSEventStreamRef streamRef, void *clie
 #if EX_BUILD_DEBUG
     [self enablePluginReloader];
 #endif
+    
+    typedef id (*origIMPFunction)(id, SEL, NSBundle *bundle);
+
+    __block origIMPFunction origIMP = NULL;
+    [XCPluginManager ex_patchInstanceSelector: @selector(loadPluginBundle:) originalIMP: (IMP *) &origIMP withReplacementBlock: ^(id self, NSBundle *bundle) {
+        NSLog(@"Inserted a patch (orig=%p)!", origIMP);
+        return origIMP(self, @selector(loadPluginBundle:), bundle);
+    }];
+    NSLog(@"MYORG: %p", origIMP);
 }
 
 @end

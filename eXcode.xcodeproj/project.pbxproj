@@ -13,6 +13,9 @@
 		05CF528D17C9AEF6009FB820 /* DevToolsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */; };
 		05CF528E17C9AF10009FB820 /* DevToolsCore.framework in Sources */ = {isa = PBXBuildFile; fileRef = 05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */; };
 		05CF529217C9BB0C009FB820 /* EXLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 05CF529117C9BB0C009FB820 /* EXLog.m */; };
+		05CF529617C9BFD7009FB820 /* EXPatchMaster.m in Sources */ = {isa = PBXBuildFile; fileRef = 05CF529517C9BFD7009FB820 /* EXPatchMaster.m */; };
+		05CF529F17C9D5C0009FB820 /* PLBlockIMP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CF529E17C9D5C0009FB820 /* PLBlockIMP.framework */; };
+		05E55C5717C9D60D00BC8510 /* PLBlockIMP.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05CF529E17C9D5C0009FB820 /* PLBlockIMP.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -29,6 +32,20 @@
 		};
 /* End PBXBuildRule section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		05E55C5617C9D5F800BC8510 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				05E55C5717C9D60D00BC8510 /* PLBlockIMP.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0544E85517C9960100F961BD /* eXcodePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eXcodePlugin.h; sourceTree = "<group>"; };
 		0544E85617C9960100F961BD /* eXcodePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eXcodePlugin.m; sourceTree = "<group>"; };
@@ -43,6 +60,13 @@
 		05CF528F17C9B123009FB820 /* NSObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSObject.h; sourceTree = "<group>"; };
 		05CF529017C9BB0C009FB820 /* EXLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXLog.h; sourceTree = "<group>"; };
 		05CF529117C9BB0C009FB820 /* EXLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXLog.m; sourceTree = "<group>"; };
+		05CF529417C9BFD7009FB820 /* EXPatchMaster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXPatchMaster.h; sourceTree = "<group>"; };
+		05CF529517C9BFD7009FB820 /* EXPatchMaster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXPatchMaster.m; sourceTree = "<group>"; };
+		05CF529817C9D159009FB820 /* class-dump */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "class-dump"; sourceTree = "<group>"; };
+		05CF529917C9D159009FB820 /* class-dump-3.4.tar.bz2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "class-dump-3.4.tar.bz2"; sourceTree = "<group>"; };
+		05CF529A17C9D159009FB820 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05CF529D17C9D586009FB820 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05CF529E17C9D5C0009FB820 /* PLBlockIMP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PLBlockIMP.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05CF529F17C9D5C0009FB820 /* PLBlockIMP.framework in Frameworks */,
 				057F636017C991AE00406854 /* Cocoa.framework in Frameworks */,
 				05CF528D17C9AEF6009FB820 /* DevToolsCore.framework in Frameworks */,
 			);
@@ -62,6 +87,8 @@
 			isa = PBXGroup;
 			children = (
 				057F636517C991AE00406854 /* eXcode */,
+				05CF529C17C9D586009FB820 /* Dependencies */,
+				05CF529717C9D159009FB820 /* bin */,
 				05CF528917C9AEA3009FB820 /* Private Frameworks */,
 				057F635E17C991AE00406854 /* Frameworks */,
 				057F635D17C991AE00406854 /* Products */,
@@ -102,6 +129,7 @@
 				0544E85617C9960100F961BD /* eXcodePlugin.m */,
 				05CF529017C9BB0C009FB820 /* EXLog.h */,
 				05CF529117C9BB0C009FB820 /* EXLog.m */,
+				05CF529317C9BFB2009FB820 /* Runtime Patching */,
 				057F636617C991AE00406854 /* Supporting Files */,
 			);
 			path = eXcode;
@@ -125,6 +153,34 @@
 			path = "Private Frameworks";
 			sourceTree = "<group>";
 		};
+		05CF529317C9BFB2009FB820 /* Runtime Patching */ = {
+			isa = PBXGroup;
+			children = (
+				05CF529417C9BFD7009FB820 /* EXPatchMaster.h */,
+				05CF529517C9BFD7009FB820 /* EXPatchMaster.m */,
+			);
+			name = "Runtime Patching";
+			sourceTree = "<group>";
+		};
+		05CF529717C9D159009FB820 /* bin */ = {
+			isa = PBXGroup;
+			children = (
+				05CF529817C9D159009FB820 /* class-dump */,
+				05CF529917C9D159009FB820 /* class-dump-3.4.tar.bz2 */,
+				05CF529A17C9D159009FB820 /* README.txt */,
+			);
+			path = bin;
+			sourceTree = "<group>";
+		};
+		05CF529C17C9D586009FB820 /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				05CF529E17C9D5C0009FB820 /* PLBlockIMP.framework */,
+				05CF529D17C9D586009FB820 /* README.txt */,
+			);
+			path = Dependencies;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -135,6 +191,7 @@
 				057F635817C991AE00406854 /* Sources */,
 				057F635917C991AE00406854 /* Frameworks */,
 				057F635A17C991AE00406854 /* Resources */,
+				05E55C5617C9D5F800BC8510 /* Copy Frameworks */,
 			);
 			buildRules = (
 				05E55C5417C9ACDF00BC8510 /* PBXBuildRule */,
@@ -191,6 +248,7 @@
 				05CF529217C9BB0C009FB820 /* EXLog.m in Sources */,
 				05CF528E17C9AF10009FB820 /* DevToolsCore.framework in Sources */,
 				0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */,
+				05CF529617C9BFD7009FB820 /* EXPatchMaster.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,10 +345,12 @@
 					"$(inherited)",
 					/Users/landonf/Documents/Code/Personal/eXcode,
 					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/OtherFrameworks",
+					/Users/landonf/Documents/Code/Personal/eXcode/Dependencies,
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "EX_BUILD_$(EX_BUILD_TYPE)=1";
 				INFOPLIST_FILE = "eXcode/eXcode-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xcplugin;
 			};
@@ -305,10 +365,12 @@
 					"$(inherited)",
 					/Users/landonf/Documents/Code/Personal/eXcode,
 					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/OtherFrameworks",
+					/Users/landonf/Documents/Code/Personal/eXcode/Dependencies,
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "EX_BUILD_$(EX_BUILD_TYPE)=1";
 				INFOPLIST_FILE = "eXcode/eXcode-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xcplugin;
 			};

@@ -28,9 +28,18 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString *EXPluginUnloadNotification;
+@interface NSObject (EXPatchMaster)
 
-@interface eXcodePlugin : NSObject
++ (BOOL) ex_patchSelector: (SEL) selector originalIMP: (IMP *) originalIMP withReplacementBlock: (id) replacementBlock;
++ (BOOL) ex_patchInstanceSelector: (SEL) selector originalIMP: (IMP *) originalIMP withReplacementBlock: (id) replacementBlock;
 
+@end
+
+@interface EXPatchMaster : NSObject
+
++ (instancetype) master;
+
+- (BOOL) patchClass: (Class) cls selector: (SEL) selector originalIMP: (IMP *) originalIMP replacementBlock: (id) replacementBlock;
+- (BOOL) patchInstancesWithClass: (Class) cls selector: (SEL) selector originalIMP: (IMP *) originalIMP replacementBlock: (id) replacementBlock;
 
 @end
