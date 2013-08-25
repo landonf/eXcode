@@ -44,7 +44,7 @@ asm << 'EOF'
         // Set up our function stack
         pushq  %rbp
         movq   %rsp, %rbp
-        subq   $16, %rsp // Two pointer struct, plus alignment
+        subq   $32, %rsp // Two pointer struct, plus alignment
 
         // Insert 'self' in the first struct position
         movq   %rdi, (%rsp)
@@ -67,7 +67,7 @@ asm << 'EOF'
         callq *0x10(%rdi)
 
         // Finished!
-        addq    $16, %rsp
+        addq    $32, %rsp
         popq    %rbp
         ret
 
