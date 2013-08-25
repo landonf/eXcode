@@ -69,7 +69,7 @@ static IMP ex_imp_implementationWithBlock (id block, SEL selector, IMP origIMP) 
     
     /* Configure the trampoline */
     void **config = pl_trampoline_data_ptr(tramp->trampoline);
-    config[0] = (__bridge void *) [block copy];
+    config[0] = Block_copy((__bridge void *)block);
     config[1] = tramp;
     config[2] = origIMP;
     config[3] = selector;
@@ -108,7 +108,7 @@ static BOOL ex_imp_removeBlock (IMP anImp) {
     }
     
     /* Release the block */
-    CFRelease(config[0]);
+    Block_release(config[0]);
     
     // TODO - what does this return value mean?
     return YES;
