@@ -37,7 +37,7 @@ trampoline_prefix () {
 asm << 'EOF'
     _block_tramp_dispatch:
         pop    %r11
-        and    $0xfffffffffffffff8, %r11 // truncate to the trampoline start (each is 8 bytes)
+        and    $0xffffffffffffffe0, %r11 // truncate to the trampoline start (each is 8 bytes)
         sub    $0x1000, %r11 // load the config location
 
         // Set up our function stack
