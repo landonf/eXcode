@@ -12,6 +12,7 @@
 		057F636A17C991AE00406854 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 057F636817C991AE00406854 /* InfoPlist.strings */; };
 		05CF528D17C9AEF6009FB820 /* DevToolsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */; };
 		05CF528E17C9AF10009FB820 /* DevToolsCore.framework in Sources */ = {isa = PBXBuildFile; fileRef = 05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */; };
+		05CF529217C9BB0C009FB820 /* EXLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 05CF529117C9BB0C009FB820 /* EXLog.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -40,6 +41,8 @@
 		057F636917C991AE00406854 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DevToolsCore.framework; path = ../OtherFrameworks/DevToolsCore.framework; sourceTree = DEVELOPER_DIR; };
 		05CF528F17C9B123009FB820 /* NSObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSObject.h; sourceTree = "<group>"; };
+		05CF529017C9BB0C009FB820 /* EXLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXLog.h; sourceTree = "<group>"; };
+		05CF529117C9BB0C009FB820 /* EXLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXLog.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +100,8 @@
 			children = (
 				0544E85517C9960100F961BD /* eXcodePlugin.h */,
 				0544E85617C9960100F961BD /* eXcodePlugin.m */,
+				05CF529017C9BB0C009FB820 /* EXLog.h */,
+				05CF529117C9BB0C009FB820 /* EXLog.m */,
 				057F636617C991AE00406854 /* Supporting Files */,
 			);
 			path = eXcode;
@@ -183,6 +188,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05CF529217C9BB0C009FB820 /* EXLog.m in Sources */,
 				05CF528E17C9AF10009FB820 /* DevToolsCore.framework in Sources */,
 				0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */,
 			);

@@ -27,6 +27,7 @@
  */
 
 #import "eXcodePlugin.h"
+#import "EXLog.h"
 
 #import "DevToolsCore/header-stamp.h" // Xcode dependency hack
 #import "DevToolsCore/XCPluginManager.h"
@@ -36,18 +37,38 @@
 static void updated_plugin_callback (ConstFSEventStreamRef streamRef, void *clientCallBackInfo, size_t numEvents, void *eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[]) {
     NSBundle *bundle = (__bridge NSBundle *) clientCallBackInfo;
     
-    /* TODO: Dispatch a synchronous "STOP EVERYTHING" notification */
+    /* Avoid any race conditions with the Xcode build process; we want (at least) the executable to be in place before we reload. If it's not there,
+     * wait for the FSEvent notifying us of its addition. */
+    if (![[NSFileManager defaultManager] fileExistsAtPath: [bundle executablePath]])
+        return;
 
-    /* Our code will no longer exist once the bundle is unloaded; we can't simply unload the bundle here, as the process will crash once it returns */
-    NSLog(@"Plugin was updated, reloading");
+    EXLog(@"Plugin was updated, reloading");
+    
+    /* TODO: Dispatch a synchronous "STOP EVERYTHING" notification */
+    
+    /* We'll re-register for events when the plugin reloads */
     FSEventStreamStop((FSEventStreamRef) streamRef);
 
-    [bundle performSelector: @selector(unload) withObject: nil afterDelay: 0.0];
-    [[XCPluginManager sharedPluginManager] performSelector: @selector(loadPluginBundle:) withObject: bundle afterDelay: 1.0f];
+
+    /*
+     * Our code will no longer exist once the bundle is unloaded; we can't simply unload the bundle here, as the process will crash once it returns.
+     * We use NSInvocationOperation operations to execute the unload,reload without relying on any code from our bundle, and use NSOperationQueue dependencies
+     * to enforce the correct ordering of the operations.
+     */
+    NSInvocationOperation *unloadOp = [[NSInvocationOperation alloc] initWithTarget: bundle
+                                                                            selector: @selector(unload)
+                                                                             object: nil];
+    
+    NSInvocationOperation *reloadOp = [[NSInvocationOperation alloc] initWithTarget: [XCPluginManager sharedPluginManager]
+                                                                           selector:@selector(findAndLoadPlugins)
+                                                                             object:nil];
+    [reloadOp addDependency: unloadOp];
+
+    [[NSOperationQueue mainQueue] addOperations: @[unloadOp,reloadOp] waitUntilFinished: NO];
 }
 
 + (void) pluginDidLoad: (NSBundle *) plugin {
-    NSLog(@"Plugin is active");
+    EXLog(@"Plugin is active");
     
     NSBundle *bundle = [NSBundle bundleForClass: [self class]];
 
