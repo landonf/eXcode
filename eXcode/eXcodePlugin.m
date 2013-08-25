@@ -111,10 +111,15 @@ static void updated_plugin_callback (ConstFSEventStreamRef streamRef, void *clie
 #if EX_BUILD_DEBUG
     [self enablePluginReloader];
 #endif
+    
+    [NSWindow ex_patchInstanceSelector: @selector(sendEvent:) withReplacementBlock: ^(EXPatchIMP *patch, NSEvent *event) {
+        NSWindow *window = (__bridge NSWindow *) patch->self;
+        NSPoint point = [window.contentView convertPoint: [event locationInWindow] fromView: nil];
+        NSView *hitView = [window.contentView hitTest: point];
+        if (hitView != nil)
+            NSLog(@"HIT: %@", hitView);
 
-    [NSView ex_patchInstanceSelector: @selector(displayIfNeeded) withReplacementBlock: ^(EXPatchIMP *patch) {
-        NSLog(@"ON DISPLAY");
-        EXPatchIMPFoward(patch, void (*)(id, SEL));
+        EXPatchIMPFoward(patch, void (*)(id, SEL, NSEvent *), event);
     }];
 }
 

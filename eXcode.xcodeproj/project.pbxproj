@@ -101,6 +101,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0527062717CA8EF500E6A5D8 /* View Analyzer */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "View Analyzer";
+			sourceTree = "<group>";
+		};
 		057F635317C991AE00406854 = {
 			isa = PBXGroup;
 			children = (
@@ -147,6 +154,7 @@
 				0544E85617C9960100F961BD /* eXcodePlugin.m */,
 				05CF529017C9BB0C009FB820 /* EXLog.h */,
 				05CF529117C9BB0C009FB820 /* EXLog.m */,
+				0527062717CA8EF500E6A5D8 /* View Analyzer */,
 				05CF529317C9BFB2009FB820 /* Runtime Patching */,
 				057F636617C991AE00406854 /* Supporting Files */,
 			);
