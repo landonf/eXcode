@@ -22,9 +22,9 @@
 			fileType = pattern.proxy;
 			isEditable = 1;
 			outputFiles = (
-				"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/$(INPUT_FILE_BASE).h",
+				"$(DERIVED_FILES_DIR)/$(CURRENT_ARCH)/$(INPUT_FILE_BASE)/header-stamp.h",
 			);
-			script = "mkdir -p \"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}\"\n${SRCROOT}/bin/class-dump --arch \"${CURRENT_ARCH}\" -H \"${INPUT_FILE_PATH}\" -o \"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}\"";
+			script = "STAMP=\"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}/header-stamp.h\"\nif [ \"${STAMP}\" -nt \"${INPUT_FILE_PATH}\" ]; then\n    exit 0\nfi\n\nmkdir -p \"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}\"\n${SRCROOT}/bin/class-dump --arch \"${CURRENT_ARCH}\" -H \"${INPUT_FILE_PATH}\" -o \"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}\"\ntouch \"${STAMP}\"";
 		};
 /* End PBXBuildRule section */
 
