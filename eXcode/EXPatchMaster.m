@@ -227,9 +227,12 @@ static BOOL ex_imp_removeBlock (IMP anImp) {
     /* Insert the new implementation */
     IMP oldIMP = method_getImplementation(m);
     IMP newIMP = ex_imp_implementationWithBlock(replacementBlock, oldIMP);
-    method_setImplementation(m, newIMP);
 
-    /* If the method has already been patched once, we don't need to add another restore block */
+    if (!class_addMethod(object_getClass(cls), selector, newIMP, method_getTypeEncoding(m))) {
+        /* Method already exists in subclass, we just need to swap the IMP */
+        method_setImplementation(m, newIMP);
+    }
+
     OSSpinLockLock(&_lock); {
         /* If the method has already been patched once, we won't need to restore the IMP */
         BOOL restoreIMP = YES;
@@ -273,7 +276,11 @@ static BOOL ex_imp_removeBlock (IMP anImp) {
         /* Insert the new implementation */
         IMP oldIMP = method_getImplementation(m);
         IMP newIMP = ex_imp_implementationWithBlock(replacementBlock, oldIMP);
-        method_setImplementation(m, newIMP);
+        
+        if (!class_addMethod(object_getClass(cls), selector, newIMP, method_getTypeEncoding(m))) {
+            /* Method already exists in subclass, we just need to swap the IMP */
+            method_setImplementation(m, newIMP);
+        }
 
         OSSpinLockLock(&_lock); {
             /* If the method has already been patched once, we won't need to restore the IMP */
