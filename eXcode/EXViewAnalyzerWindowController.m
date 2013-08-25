@@ -27,8 +27,14 @@
  */
 
 #import "EXViewAnalyzerWindowController.h"
-#import "eXcodePlugin.h"
 #import "EXLog.h"
+
+#import "EXPatchMaster.h"
+
+#import "eXcodePlugin.h"
+
+/** Notification sent when a new vew is targeted by the EXViewAnalyzer. The targeted view will be available via -[NSNotification object]. */
+static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTargetedViewNotification";
 
 @interface EXViewAnalyzerWindowController ()
 
@@ -37,11 +43,15 @@
 /**
  * Manages the View Analyzer window.
  */
-@implementation EXViewAnalyzerWindowController
+@implementation EXViewAnalyzerWindowController {
+    id _observerToken;
+}
 
 - (void) handleUnloadNotification: (NSNotification *) notification {
     [self close];
 }
+
+
 
 /**
  * Initialize a new window controller instance.
@@ -53,11 +63,41 @@
     /* Handle unload */
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleUnloadNotification:) name: EXPluginUnloadNotification object: [NSBundle bundleForClass: [self class]]];
 
+    /* Stub out the notification */
+    _observerToken = [[NSNotificationCenter defaultCenter] addObserverForName: EXViewAnalyzerTargetedViewNotification object: nil queue: [NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        NSLog(@"VIEW: %@", [note object]);
+    }];
+    
+    /* Enable the NSEvent-based notification hook.  */
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [NSWindow ex_patchInstanceSelector: @selector(sendEvent:) withReplacementBlock: ^(EXPatchIMP *patch, NSEvent *event) {
+            NSWindow *window = (__bridge NSWindow *) patch->self;
+            if ([window isKeyWindow]) {
+                /* The last view seen */
+                static NSView *lastView = nil;
+                                
+                NSPoint point = [window.contentView convertPoint: [event locationInWindow] fromView: nil];
+                NSView *hitView = [window.contentView hitTest: point];
+
+                /* Only send a notification when the view changes */
+                if (hitView != nil && hitView != lastView) {
+                    lastView = hitView;
+                    [[NSNotificationCenter defaultCenter] postNotificationName: EXViewAnalyzerTargetedViewNotification object: hitView];
+                }
+            }
+            
+            EXPatchIMPFoward(patch, void (*)(id, SEL, NSEvent *), event);
+        }];
+    });
+
+
     return self;
 }
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver: self];
+    [[NSNotificationCenter defaultCenter] removeObserver: _observerToken];
 }
 
 - (void) windowDidLoad {

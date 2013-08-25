@@ -91,21 +91,6 @@ static eXcodePlugin *sharedPlugin = nil;
     _analyzerWindowController = [[EXViewAnalyzerWindowController alloc] init];
     [_analyzerWindowController showWindow: nil];
 
-#if 1
-    // Hacked in logger
-    [NSWindow ex_patchInstanceSelector: @selector(sendEvent:) withReplacementBlock: ^(EXPatchIMP *patch, NSEvent *event) {
-        NSWindow *window = (__bridge NSWindow *) patch->self;
-        if ([window isKeyWindow]) {
-            NSPoint point = [window.contentView convertPoint: [event locationInWindow] fromView: nil];
-            NSView *hitView = [window.contentView hitTest: point];
-            if (hitView != nil)
-                NSLog(@"HIT: %@", hitView);
-        }
-        
-        EXPatchIMPFoward(patch, void (*)(id, SEL, NSEvent *), event);
-    }];
-#endif
-
     return self;
 }
 
