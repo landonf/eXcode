@@ -30,28 +30,28 @@
 #import "EXLog.h"
 
 #import "EXPatchMaster.h"
+#import "EXViewAnalyzerNode.h"
 
 #import "eXcodePlugin.h"
 
 /** Notification sent when a new vew is targeted by the EXViewAnalyzer. The targeted view will be available via -[NSNotification object]. */
 static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTargetedViewNotification";
 
-@interface EXViewAnalyzerWindowController ()
-
-@end
+@interface EXViewAnalyzerWindowController (NSOutlineViewDataSource) <NSOutlineViewDataSource> @end
 
 /**
  * Manages the View Analyzer window.
  */
 @implementation EXViewAnalyzerWindowController {
-    id _observerToken;
+    /** Managed outline view */
+    IBOutlet __weak NSOutlineView *_outlineView;
+    
+    /** Top-level node, or nil if none. */
+    EXViewAnalyzerNode *_head;
+
+    /** All instantiated subnodes */
+    NSMutableArray *_subnodes;
 }
-
-- (void) handleUnloadNotification: (NSNotification *) notification {
-    [self close];
-}
-
-
 
 /**
  * Initialize a new window controller instance.
@@ -59,21 +59,21 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
 - (id) init {
     if ((self = [super initWithWindowNibName: [self className] owner: self]) == nil)
         return nil;
+    
+    _subnodes = [NSMutableArray array];
 
     /* Handle unload */
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleUnloadNotification:) name: EXPluginUnloadNotification object: [NSBundle bundleForClass: [self class]]];
 
-    /* Stub out the notification */
-    _observerToken = [[NSNotificationCenter defaultCenter] addObserverForName: EXViewAnalyzerTargetedViewNotification object: nil queue: [NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        NSLog(@"VIEW: %@", [note object]);
-    }];
+    /* View changed notification */
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleViewChangedNotification:) name: EXViewAnalyzerTargetedViewNotification object: nil];
     
     /* Enable the NSEvent-based notification hook.  */
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [NSWindow ex_patchInstanceSelector: @selector(sendEvent:) withReplacementBlock: ^(EXPatchIMP *patch, NSEvent *event) {
             NSWindow *window = (__bridge NSWindow *) patch->self;
-            if ([window isKeyWindow]) {
+            if (window != self.window && [event type] == NSLeftMouseUp && [window isKeyWindow]) {
                 /* The last view seen */
                 static NSView *lastView = nil;
                                 
@@ -95,15 +95,84 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     return self;
 }
 
+// EXViewAnalyzerTargetedViewNotification notification
+- (void) handleViewChangedNotification: (NSNotification *) notification {
+    _head = [[EXViewAnalyzerNode alloc] initWithView: [notification object]];
+    [_subnodes removeAllObjects];
+    [_outlineView reloadData];
+}
+
+// EXPluginUnloadNotification notification
+- (void) handleUnloadNotification: (NSNotification *) notification {
+    @autoreleasepool {
+        [self close];
+    }
+}
+
 - (void) dealloc {
+    _outlineView.dataSource = nil;
     [[NSNotificationCenter defaultCenter] removeObserver: self];
-    [[NSNotificationCenter defaultCenter] removeObserver: _observerToken];
 }
 
 - (void) windowDidLoad {
     [super windowDidLoad];
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+}
+
+@end
+
+@implementation EXViewAnalyzerWindowController (NSOutlineViewDataSource)
+
+- (NSInteger) outlineView: (NSOutlineView *) outlineView numberOfChildrenOfItem: (id) item {
+    EXViewAnalyzerNode *node = item;
+
+    if (_head == nil)
+        return 0;
+    
+    if (item == nil)
+        return 1;
+
+    return [[node subviews] count];
+}
+
+- (id) outlineView: (NSOutlineView *) outlineView child: (NSInteger) index ofItem: (id) item {
+    EXViewAnalyzerNode *node = item;
+
+    if (item == nil)
+        return _head;
+    
+    EXViewAnalyzerNode *new = [[EXViewAnalyzerNode alloc] initWithView: [[node subviews] objectAtIndex: index]];
+    [_subnodes addObject: new];
+    return new;
+}
+
+- (id) outlineView: (NSOutlineView *) outlineView objectValueForTableColumn: (NSTableColumn *) tableColumn byItem: (id) item {
+    EXViewAnalyzerNode *node = item;
+
+    NSString *identifier = [tableColumn identifier];
+    if ([identifier isEqual: @"name"]) {
+        return node.className;
+    } else if ([identifier isEqual: @"address"]) {
+        return [NSString stringWithFormat: @"%p", (void *)node.address];
+    } else if ([identifier isEqual: @"path"]) {
+        if (node.codePath != nil)
+            return node.codePath;
+        else
+            return @"<unknown>";
+    }
+
+    // Unreachable
+    abort();
+}
+
+- (BOOL) outlineView: (NSOutlineView *) outlineView isItemExpandable: (id) item {
+    EXViewAnalyzerNode *node = item;
+    
+    if ([node.subviews count] > 0)
+        return YES;
+    
+    return NO;
 }
 
 @end
