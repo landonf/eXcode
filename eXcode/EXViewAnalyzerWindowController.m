@@ -33,6 +33,8 @@
 #import "EXViewAnalyzerNode.h"
 #import "EXViewAnalyzerOutlineView.h"
 
+#import "EXUniversalBinary.h"
+
 #import "eXcodePlugin.h"
 
 #import <objc/runtime.h>
@@ -153,8 +155,30 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     NSMenu *rowMenu = [[NSMenu alloc] initWithTitle:@"View Analzyer"];
 
     [[rowMenu addItemWithTitle: @"Open in Hopper" action: @selector(openWithHopper:) keyEquivalent: @""] setRepresentedObject: node];
-    [[rowMenu addItemWithTitle: @"Open in IDA Pro (32-bit)" action: @selector(openWithIDA32:) keyEquivalent: @""] setRepresentedObject: node];
-    [[rowMenu addItemWithTitle: @"Open in IDA Pro (64-bit)" action: @selector(openWithIDA64:) keyEquivalent: @""] setRepresentedObject: node];
+
+    /* Determine the available binaries; we only offer IDA 32/64 depending on availability */
+    NSError *error;
+    EXUniversalBinary *universal = [EXUniversalBinary binaryWithPath: node.codePath error: &error];
+    if (universal == nil) {
+        NSLog(@"Failed to load binary: %@", universal);
+        return rowMenu;
+    }
+
+    BOOL has64 = NO;
+    BOOL has32 = NO;
+    for (EXExecutableBinary *binary in universal.executables) {
+        if (binary.cpu_type & CPU_ARCH_ABI64) {
+            has64 = YES;
+        } else {
+            has32 = YES;
+        }
+    }
+    
+    if (has32)
+        [[rowMenu addItemWithTitle: @"Open in IDA Pro (32-bit)" action: @selector(openWithIDA32:) keyEquivalent: @""] setRepresentedObject: node];
+    
+    if (has64)
+        [[rowMenu addItemWithTitle: @"Open in IDA Pro (64-bit)" action: @selector(openWithIDA64:) keyEquivalent: @""] setRepresentedObject: node];
     
     return rowMenu;
 }
