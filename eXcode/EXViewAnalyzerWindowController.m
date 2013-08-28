@@ -158,6 +158,8 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     [fscriptWindow setDelegate: self];
     [_interpreterWindows addObject: fscriptWindow];
     
+    [[fscriptView interpreter] browse: node];
+    
     /* Pop the console */
     [fscriptWindow orderFront: nil];
 }
@@ -188,7 +190,7 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     
     NSMenu *rowMenu = [[NSMenu alloc] initWithTitle:@"View Analzyer"];
     
-    [[rowMenu addItemWithTitle: @"Examine in F-Script Console" action: @selector(openInFScriptConsole:) keyEquivalent: @""] setRepresentedObject: node];
+    [[rowMenu addItemWithTitle: @"Examine with F-Script" action: @selector(openInFScriptConsole:) keyEquivalent: @""] setRepresentedObject: node];
     
     NSMenuItem *decompileItem = [rowMenu addItemWithTitle: @"Open with ..." action: @selector(submenuAction:) keyEquivalent: @""];
     NSMenu *decompileMenu = [[NSMenu alloc] init];
