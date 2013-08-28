@@ -7,7 +7,7 @@
 {
   BOOL freeWhenDone;
   BOOL freed;
-  __strong char *type;
+  char *type;
   char fsEncodedType;
 }  
  

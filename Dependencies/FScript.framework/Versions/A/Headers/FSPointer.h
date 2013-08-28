@@ -11,7 +11,7 @@
 @interface FSPointer : NSObject
 {
   NSUInteger retainCount;
-  __strong void *cPointer;
+  void *cPointer;
 }
   
 + (FSGenericPointer *) allocateCollectable:(NSUInteger)size;

@@ -25,4 +25,5 @@ FScript.framework
       MIT
 
     Modifications:
-      The library install name was modified to use @rpath.
+      - The library install name was modified to use @rpath.
+      - Minor changes were made to the headers to fix build warnings.

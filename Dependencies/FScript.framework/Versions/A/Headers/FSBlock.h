@@ -7,6 +7,8 @@ extern NSString *FS_Block_keyOfSetValueForKeyMessage(FSBlock *block);
 
 @class BlockInspector, FSMsgContext, BlockRep, FSSymbolTable, FSCNBase, FSInterpreter, FSInterpreterResult;
 
+struct BlockSignature;
+
 @interface FSBlock:NSObject <NSCopying , NSCoding>
 {
   NSUInteger retainCount;    
