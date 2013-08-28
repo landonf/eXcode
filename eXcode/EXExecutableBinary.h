@@ -29,7 +29,7 @@
 #import <Foundation/Foundation.h>
 #import <mach-o/arch.h>
 
-@interface PLExecutableBinary : NSObject {
+@interface EXExecutableBinary : NSObject {
     /** The image path */
     NSString *_path;
     

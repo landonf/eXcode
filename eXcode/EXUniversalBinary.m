@@ -53,7 +53,7 @@
  * @par Thread Safety
  * Immutable and thread-safe. May be used from any thread.
  */
-@implementation PLUniversalBinary
+@implementation EXUniversalBinary
 
 @synthesize executables = _executables;
 
@@ -64,7 +64,7 @@
  * a single PLExecutbleBinary instance.
  * @param error If an error occurs, upon return contains an NSError object that describes the problem.
  *
- * @return Returns an initialized PLUniversalBinary instance, or nil if binary can not
+ * @return Returns an initialized EXUniversalBinary instance, or nil if binary can not
  * be parsed.
  */
 + (id) binaryWithPath: (NSString *) path error: (NSError **) outError {
@@ -78,7 +78,7 @@
  * a single PLExecutbleBinary instance.
  * @param error If an error occurs, upon return contains an NSError object that describes the problem.
  *
- * @return Returns an initialized PLUniversalBinary instance, or nil if binary can not
+ * @return Returns an initialized EXUniversalBinary instance, or nil if binary can not
  * be parsed.
  */
 - (id) initWithPath: (NSString *) path error: (NSError **) outError {
@@ -118,7 +118,7 @@
     input.length = [mapped length];
 
     /* Read the file type. */
-    const uint32_t *magic = pl_macho_read(&input, input.data, sizeof(uint32_t));
+    const uint32_t *magic = ex_macho_read(&input, input.data, sizeof(uint32_t));
     if (magic == NULL) {
         NSString *desc = NSLocalizedString(@"Could not read Mach-O magic.", @"Invalid binary");
         exmacho_populate_nserror(outError, EXMachOErrorInvalidBinary, desc, nil);        
@@ -139,7 +139,7 @@
             
         case FAT_CIGAM:
         case FAT_MAGIC:
-            fat_header = pl_macho_read(&input, input.data, sizeof(*fat_header));
+            fat_header = ex_macho_read(&input, input.data, sizeof(*fat_header));
             universal = true;
             break;
             
@@ -154,7 +154,7 @@
     NSMutableArray *executableData = [NSMutableArray array];
     if (universal) {
         uint32_t nfat = OSSwapBigToHostInt32(fat_header->nfat_arch);
-        const struct fat_arch *archs = pl_macho_offset(&input, fat_header, sizeof(struct fat_header), sizeof(struct fat_arch));
+        const struct fat_arch *archs = ex_macho_offset(&input, fat_header, sizeof(struct fat_header), sizeof(struct fat_arch));
         if (archs == NULL) {
             NSString *desc = NSLocalizedString(@"Could not read Mach-O universal architecture list.", @"Invalid binary");
             exmacho_populate_nserror(outError, EXMachOErrorInvalidBinary, desc, nil);        
@@ -162,7 +162,7 @@
         }
         
         for (uint32_t i = 0; i < nfat; i++) {
-            const struct fat_arch *arch = pl_macho_read(&input, archs + i, sizeof(struct fat_arch));
+            const struct fat_arch *arch = ex_macho_read(&input, archs + i, sizeof(struct fat_arch));
             if (arch == NULL) {
                 NSString *desc = NSLocalizedString(@"Could not read Mach-O universal architecture.", @"Invalid binary");
                 exmacho_populate_nserror(outError, EXMachOErrorInvalidBinary, desc, nil);        
@@ -172,7 +172,7 @@
             /* Fetch a pointer to the architecture's Mach-O data. */
             macho_input_t arch_input;
             arch_input.length = OSSwapBigToHostInt32(arch->size);
-            arch_input.data = pl_macho_offset(&input, input.data, OSSwapBigToHostInt32(arch->offset), arch_input.length);
+            arch_input.data = ex_macho_offset(&input, input.data, OSSwapBigToHostInt32(arch->offset), arch_input.length);
             if (arch_input.data == NULL) {
                 NSString *desc = NSLocalizedString(@"Could not read Mach-O universal executable.", @"Invalid binary");
                 exmacho_populate_nserror(outError, EXMachOErrorInvalidBinary, desc, nil);        
@@ -198,7 +198,7 @@
     
     for (NSData *data in executableData) {
         NSError *error;
-        PLExecutableBinary *binary = [PLExecutableBinary binaryWithPath: _path data: data error: &error];
+        EXExecutableBinary *binary = [EXExecutableBinary binaryWithPath: _path data: data error: &error];
         if (binary == nil) {
             NSLog(@"Skipping invalid member of universal binary: %@", error);
             continue;
@@ -215,7 +215,7 @@
 /**
  * Return the executable that best matches the current architecture, or nil if none is found.
  */
-- (PLExecutableBinary *) executableMatchingCurrentArchitecture {    
+- (EXExecutableBinary *) executableMatchingCurrentArchitecture {    
     /* Determine the Mach-O architecture for the host process */
     Dl_info info;
     const void *main = dlsym(RTLD_DEFAULT, "main");
@@ -228,7 +228,7 @@
     /* Parse out the binary info
      * XXX - Note the use of a bogus length field. We assume that since the image is mapped, it won't contain invalid length data */
     NSError *error;
-    PLExecutableBinary *mainBinary = [PLExecutableBinary binaryWithPath: [NSString stringWithUTF8String: info.dli_fname]
+    EXExecutableBinary *mainBinary = [EXExecutableBinary binaryWithPath: [NSString stringWithUTF8String: info.dli_fname]
                                                                    data: [NSData dataWithBytesNoCopy: info.dli_fbase length: 100 * 1024 * 1024 freeWhenDone: NO]
                                                                   error: &error];
     if (mainBinary == nil) {
@@ -237,8 +237,8 @@
         return nil;
     }
 
-    PLExecutableBinary *matchedExec = nil;
-    for (PLExecutableBinary *exec in self.executables) {
+    EXExecutableBinary *matchedExec = nil;
+    for (EXExecutableBinary *exec in self.executables) {
         if (exec.cpu_type == mainBinary.cpu_type) {
             if (matchedExec == nil) {
                 matchedExec = exec;
@@ -262,7 +262,7 @@
 - (BOOL) loadLibraryWithRPaths: (NSArray *) rpaths error: (NSError **) outError {
     NSFileManager *fm = [[NSFileManager alloc] init];
     
-    PLExecutableBinary *exec = [self executableMatchingCurrentArchitecture];
+    EXExecutableBinary *exec = [self executableMatchingCurrentArchitecture];
     if (exec == nil) {
         NSString *desc = NSLocalizedString(@"This binary is not supported by the current architecture.", @"Invalid binary");
         exmacho_populate_nserror(outError, EXMachOErrorInvalidBinary, desc, nil);        
@@ -286,7 +286,7 @@
             }
 
             /* Load the target */
-            PLUniversalBinary *linkTarget = [PLUniversalBinary binaryWithPath: dylib error: outError];
+            EXUniversalBinary *linkTarget = [EXUniversalBinary binaryWithPath: dylib error: outError];
             if (linkTarget == nil)
                 return NO;
             

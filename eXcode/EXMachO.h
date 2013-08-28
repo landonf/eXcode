@@ -72,5 +72,5 @@ typedef struct macho_input {
     size_t length;
 } macho_input_t;
 
-const void *pl_macho_read (macho_input_t *input, const void *address, size_t length);
-const void *pl_macho_offset (macho_input_t *input, const void *address, size_t offset, size_t length);
+const void *ex_macho_read (macho_input_t *input, const void *address, size_t length);
+const void *ex_macho_offset (macho_input_t *input, const void *address, size_t offset, size_t length);

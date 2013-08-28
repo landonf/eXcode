@@ -46,7 +46,7 @@
  * As a caveat to the above, multiple threads must involve synchronization to avoid issues with
  * loading conflicting libraries.
  */
-@implementation PLExecutableBinary
+@implementation EXExecutableBinary
 
 @synthesize cpu_type = _cpu_type;
 @synthesize cpu_subtype = _cpu_subtype;
@@ -70,7 +70,7 @@ static uint32_t macho_nswap32(uint32_t input) {
  * @param data A buffer containing a full Mach-O binary.
  * @param outError If an error occurs, upon return contains an NSError object that describes the problem.
  *
- * @return Returns an initialized PLExecutableBinary instance, or nil if binary can not
+ * @return Returns an initialized EXExecutableBinary instance, or nil if binary can not
  * be parsed.
  */
 + (id) binaryWithPath: (NSString *) path data: (NSData *) data error: (NSError **) outError {
@@ -84,7 +84,7 @@ static uint32_t macho_nswap32(uint32_t input) {
  * @param data A buffer containing a full Mach-O binary.
  * @param outError If an error occurs, upon return contains an NSError object that describes the problem.
  *
- * @return Returns an initialized PLExecutableBinary instance, or nil if binary can not
+ * @return Returns an initialized EXExecutableBinary instance, or nil if binary can not
  * be parsed.
  */
 - (id) initWithPath: (NSString *) path data: (NSData *) data error: (NSError **) outError {
@@ -99,7 +99,7 @@ static uint32_t macho_nswap32(uint32_t input) {
     input.length = [data length];
     
     /* Read the file type. */
-    const uint32_t *magic = pl_macho_read(&input, input.data, sizeof(uint32_t));
+    const uint32_t *magic = ex_macho_read(&input, input.data, sizeof(uint32_t));
     if (magic == NULL) {
         NSString *desc = NSLocalizedString(@"Could not read Mach-O magic.", @"Invalid binary");
         exmacho_populate_nserror(outError, EXMachOErrorInvalidBinary, desc, nil);        
@@ -122,7 +122,7 @@ static uint32_t macho_nswap32(uint32_t input) {
         case MH_MAGIC:
             
             header_size = sizeof(*header);
-            header = pl_macho_read(&input, input.data, header_size);
+            header = ex_macho_read(&input, input.data, header_size);
             if (header == NULL) {
                 NSString *desc = NSLocalizedString(@"Could not read Mach-O header.", @"Invalid binary");
                 exmacho_populate_nserror(outError, EXMachOErrorInvalidBinary, desc, nil);        
@@ -136,7 +136,7 @@ static uint32_t macho_nswap32(uint32_t input) {
             
         case MH_MAGIC_64:
             header_size = sizeof(*header64);
-            header64 = pl_macho_read(&input, input.data, sizeof(*header64));
+            header64 = ex_macho_read(&input, input.data, sizeof(*header64));
             if (header64 == NULL) {
                 NSString *desc = NSLocalizedString(@"Could not read Mach-O header.", @"Invalid binary");
                 exmacho_populate_nserror(outError, EXMachOErrorInvalidBinary, desc, nil);        
@@ -161,7 +161,7 @@ static uint32_t macho_nswap32(uint32_t input) {
     _cpu_subtype = header->cpusubtype;
     
     /* Parse the Mach-O load commands */
-    const struct load_command *cmd = pl_macho_offset(&input, header, header_size, sizeof(struct load_command));
+    const struct load_command *cmd = ex_macho_offset(&input, header, header_size, sizeof(struct load_command));
     if (cmd == NULL) {
         NSString *desc = NSLocalizedString(@"Could not fetch Mach-O load command.", @"Invalid binary");
         exmacho_populate_nserror(outError, EXMachOErrorInvalidBinary, desc, nil);        
@@ -179,7 +179,7 @@ static uint32_t macho_nswap32(uint32_t input) {
     for (uint32_t i = 0; i < ncmds; i++) {
         /* Load the full command */
         uint32_t cmdsize = swap32(cmd->cmdsize);
-        cmd = pl_macho_read(&input, cmd, cmdsize);
+        cmd = ex_macho_read(&input, cmd, cmdsize);
         if (cmd == NULL) {
             NSString *desc = NSLocalizedString(@"Could not read Mach-O load command.", @"Invalid binary");
             exmacho_populate_nserror(outError, EXMachOErrorInvalidBinary, desc, nil);        
@@ -198,7 +198,7 @@ static uint32_t macho_nswap32(uint32_t input) {
                 }
                 
                 size_t pathlen = cmdsize - sizeof(struct rpath_command);
-                const void *pathptr = pl_macho_offset(&input, cmd, sizeof(struct rpath_command), pathlen);
+                const void *pathptr = ex_macho_offset(&input, cmd, sizeof(struct rpath_command), pathlen);
                 if (pathptr == NULL) {
                     NSString *desc = NSLocalizedString(@"Could not read path name from LC_RPATH", @"Invalid binary");
                     exmacho_populate_nserror(outError, EXMachOErrorInvalidBinary, desc, nil);        
@@ -223,7 +223,7 @@ static uint32_t macho_nswap32(uint32_t input) {
                 }
                 
                 size_t namelen = cmdsize - sizeof(struct dylib_command);
-                const void *nameptr = pl_macho_offset(&input, cmd, sizeof(struct dylib_command), namelen);
+                const void *nameptr = ex_macho_offset(&input, cmd, sizeof(struct dylib_command), namelen);
                 if (nameptr == NULL) {
                     NSString *desc = NSLocalizedString(@"Could not read path name from LC_LOAD_DYLIB", @"Invalid binary");
                     exmacho_populate_nserror(outError, EXMachOErrorInvalidBinary, desc, nil);        
@@ -243,7 +243,7 @@ static uint32_t macho_nswap32(uint32_t input) {
         }
         
         /* Load the next command */
-        cmd = pl_macho_offset(&input, cmd, cmdsize, sizeof(struct load_command));
+        cmd = ex_macho_offset(&input, cmd, cmdsize, sizeof(struct load_command));
         if (cmd == NULL) {
             NSString *desc = NSLocalizedString(@"Could not fetch next Mach-O load command.", @"Invalid binary");
             exmacho_populate_nserror(outError, EXMachOErrorInvalidBinary, desc, nil);        

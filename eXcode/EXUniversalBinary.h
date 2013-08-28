@@ -30,7 +30,7 @@
 
 #import "EXExecutableBinary.h"
 
-@interface PLUniversalBinary : NSObject {
+@interface EXUniversalBinary : NSObject {
 @private
     /** Path to binary */
     NSString *_path;
@@ -43,9 +43,9 @@
 
 - (id) initWithPath: (NSString *) path error: (NSError **) outError;
 
-- (PLExecutableBinary *) executableMatchingCurrentArchitecture;
+- (EXExecutableBinary *) executableMatchingCurrentArchitecture;
 
-/** All valid Mach-O executables found within the binary, as an ordered array of PLExecutableBinary instances. The array
+/** All valid Mach-O executables found within the binary, as an ordered array of EXExecutableBinary instances. The array
  * will be ordered to match the in-file ordering. */
 @property(nonatomic, readonly) NSArray *executables;
 

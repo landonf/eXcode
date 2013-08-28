@@ -81,7 +81,7 @@ void exmacho_populate_nserror (NSError **error, EXMachOError code, NSString *des
 }
 
 /* Verify that the given range is within bounds. */
-const void *pl_macho_read (macho_input_t *input, const void *address, size_t length) {
+const void *ex_macho_read (macho_input_t *input, const void *address, size_t length) {
     if ((((uint8_t *) address) - ((uint8_t *) input->data)) + length > input->length) {
         return NULL;
     }
@@ -90,7 +90,7 @@ const void *pl_macho_read (macho_input_t *input, const void *address, size_t len
 }
 
 /* Verify that address + offset + length is within bounds. */
-const void *pl_macho_offset (macho_input_t *input, const void *address, size_t offset, size_t length) {
+const void *ex_macho_offset (macho_input_t *input, const void *address, size_t offset, size_t length) {
     void *result = ((uint8_t *) address) + offset;
-    return pl_macho_read(input, result, length);
+    return ex_macho_read(input, result, length);
 }
