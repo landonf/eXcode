@@ -13,3 +13,16 @@ PLBlockIMP.framework
 
     Modifications:
       None
+
+FScript.framework
+    Description:
+      Provides an in-process REPL.
+
+    Version:
+      F-Script 20100614 downloaded from http://www.fscript.org/
+
+    License:
+      MIT
+
+    Modifications:
+      The library install name was modified to use @rpath.

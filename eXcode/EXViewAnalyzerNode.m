@@ -39,7 +39,7 @@
         return nil;
     
     _className = [view className];
-    _address = (uintptr_t) view;
+    _address = view;
     _subviews = [[view subviews] copy];
     
     Dl_info dli;

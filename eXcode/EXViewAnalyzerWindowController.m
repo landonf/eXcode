@@ -36,6 +36,7 @@
 #import "EXUniversalBinary.h"
 
 #import "eXcodePlugin.h"
+#import <FScript/FScript.h>
 
 #import <objc/runtime.h>
 
@@ -43,6 +44,8 @@
 static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTargetedViewNotification";
 
 @interface EXViewAnalyzerWindowController (NSOutlineViewDataSource) <EXViewAnalyzerOutlineViewDataSource> @end
+
+@interface EXViewAnalyzerWindowController () <NSWindowDelegate> @end
 
 /**
  * Manages the View Analyzer window.
@@ -56,6 +59,9 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
 
     /** All instantiated subnodes */
     NSMutableArray *_subnodes;
+    
+    /** All interpreter windows */
+    NSMutableArray *_interpreterWindows;
 }
 
 /**
@@ -66,6 +72,7 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
         return nil;
     
     _subnodes = [NSMutableArray array];
+    _interpreterWindows = [NSMutableArray array];
 
     /* Handle unload */
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleUnloadNotification:) name: EXPluginUnloadNotification object: [NSBundle bundleForClass: [self class]]];
@@ -128,6 +135,33 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
 }
 
+// from NSWindowDelegate protocol
+- (void) windowWillClose: (NSNotification *) notification {
+    [_interpreterWindows removeObject: [notification object]];
+}
+
+- (void) openInFScriptConsole: (NSMenuItem *) item {
+    EXViewAnalyzerNode *node = [item representedObject];
+
+    /* Interpeter window */
+    NSWindow *fscriptWindow  = [[NSWindow alloc] initWithContentRect: NSMakeRect(100, 100, 500, 400)
+                                                        styleMask: NSClosableWindowMask | NSTitledWindowMask
+                                                          backing: NSBackingStoreBuffered
+                                                            defer: NO];
+    FSInterpreterView *fscriptView = [[FSInterpreterView alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
+    [fscriptWindow setContentView: fscriptView];
+    
+    /* Add this instance to the interpreter */
+    [[fscriptView interpreter] setObject: node.address forIdentifier: @"target"];
+
+    /* Configure ourself as a delegate, and ensure the window survives */
+    [fscriptWindow setDelegate: self];
+    [_interpreterWindows addObject: fscriptWindow];
+    
+    /* Pop the console */
+    [fscriptWindow orderFront: nil];
+}
+
 - (void) openWithHopper: (NSMenuItem *) item {
     EXViewAnalyzerNode *node = [item representedObject];
     [[NSWorkspace sharedWorkspace] openFile: node.codePath withApplication: @"Hopper Disassembler" andDeactivate: YES];
@@ -153,6 +187,8 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
         return nil;
     
     NSMenu *rowMenu = [[NSMenu alloc] initWithTitle:@"View Analzyer"];
+    
+    [[rowMenu addItemWithTitle: @"F-Script Console" action: @selector(openInFScriptConsole:) keyEquivalent: @""] setRepresentedObject: node];
 
     [[rowMenu addItemWithTitle: @"Open in Hopper" action: @selector(openWithHopper:) keyEquivalent: @""] setRepresentedObject: node];
 

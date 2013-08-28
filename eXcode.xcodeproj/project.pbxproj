@@ -15,6 +15,8 @@
 		0527064717CD94B800E6A5D8 /* EXMachO.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527064317CD94B800E6A5D8 /* EXMachO.m */; };
 		0527064817CD94B800E6A5D8 /* EXUniversalBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527064517CD94B800E6A5D8 /* EXUniversalBinary.m */; };
 		0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 0544E85617C9960100F961BD /* eXcodePlugin.m */; };
+		0556AAF117CD9C4D000A5197 /* FScript.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
+		0556AAF217CD9C59000A5197 /* FScript.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
 		057F636017C991AE00406854 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057F635F17C991AE00406854 /* Cocoa.framework */; };
 		057F636A17C991AE00406854 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 057F636817C991AE00406854 /* InfoPlist.strings */; };
 		05CF528D17C9AEF6009FB820 /* DevToolsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */; };
@@ -62,6 +64,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				05E55C5717C9D60D00BC8510 /* PLBlockIMP.framework in Copy Frameworks */,
+				0556AAF217CD9C59000A5197 /* FScript.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,6 +88,7 @@
 		0527064C17CD95B900E6A5D8 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = SOURCE_ROOT; };
 		0544E85517C9960100F961BD /* eXcodePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eXcodePlugin.h; sourceTree = "<group>"; };
 		0544E85617C9960100F961BD /* eXcodePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eXcodePlugin.m; sourceTree = "<group>"; };
+		0556AAF017CD9C4D000A5197 /* FScript.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FScript.framework; sourceTree = "<group>"; };
 		057F635C17C991AE00406854 /* eXcode.xcplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = eXcode.xcplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		057F635F17C991AE00406854 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		057F636217C991AE00406854 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -113,6 +117,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0556AAF117CD9C4D000A5197 /* FScript.framework in Frameworks */,
 				05CF529F17C9D5C0009FB820 /* PLBlockIMP.framework in Frameworks */,
 				057F636017C991AE00406854 /* Cocoa.framework in Frameworks */,
 				05CF528D17C9AEF6009FB820 /* DevToolsCore.framework in Frameworks */,
@@ -247,6 +252,7 @@
 		05CF529C17C9D586009FB820 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
+				0556AAF017CD9C4D000A5197 /* FScript.framework */,
 				05CF529E17C9D5C0009FB820 /* PLBlockIMP.framework */,
 				05CF529D17C9D586009FB820 /* README.txt */,
 			);

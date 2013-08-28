@@ -36,7 +36,7 @@
 @property(nonatomic, readonly) NSString *className;
 
 /** Instance address */
-@property(nonatomic, readonly) uintptr_t address;
+@property(nonatomic, readonly) id address;
 
 /** Enclosing binary name, or nil if unknown. */
 @property(nonatomic, readonly) NSString *codePath;
