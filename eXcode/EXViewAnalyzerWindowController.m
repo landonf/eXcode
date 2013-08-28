@@ -156,6 +156,7 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     
     /* Add this instance to the interpreter */
     [[fscriptView interpreter] setObject: node.address forIdentifier: @"target"];
+    [fscriptView notifyUser: @"The target view is available as the 'target' variable"];
 
     /* Configure ourself as a delegate, and ensure the window survives */
     [fscriptWindow setDelegate: self];
