@@ -131,7 +131,12 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     [[NSWorkspace sharedWorkspace] openFile: node.codePath withApplication: @"Hopper Disassembler" andDeactivate: YES];
 }
 
-- (void) openWithIDA: (NSMenuItem *) item {
+- (void) openWithIDA32: (NSMenuItem *) item {
+    EXViewAnalyzerNode *node = [item representedObject];
+    [[NSWorkspace sharedWorkspace] openFile: node.codePath withApplication: @"idaq" andDeactivate: YES];
+}
+
+- (void) openWithIDA64: (NSMenuItem *) item {
     EXViewAnalyzerNode *node = [item representedObject];
     [[NSWorkspace sharedWorkspace] openFile: node.codePath withApplication: @"idaq64" andDeactivate: YES];
 }
@@ -148,7 +153,8 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     NSMenu *rowMenu = [[NSMenu alloc] initWithTitle:@"View Analzyer"];
 
     [[rowMenu addItemWithTitle: @"Open in Hopper" action: @selector(openWithHopper:) keyEquivalent: @""] setRepresentedObject: node];
-    [[rowMenu addItemWithTitle: @"Open in IDA Pro" action: @selector(openWithIDA:) keyEquivalent: @""] setRepresentedObject: node];
+    [[rowMenu addItemWithTitle: @"Open in IDA Pro (32-bit)" action: @selector(openWithIDA32:) keyEquivalent: @""] setRepresentedObject: node];
+    [[rowMenu addItemWithTitle: @"Open in IDA Pro (64-bit)" action: @selector(openWithIDA64:) keyEquivalent: @""] setRepresentedObject: node];
     
     return rowMenu;
 }
