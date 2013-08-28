@@ -11,6 +11,9 @@
 		0527062E17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0527062C17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib */; };
 		0527063717CD62AB00E6A5D8 /* EXViewAnalyzerNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527063617CD62AB00E6A5D8 /* EXViewAnalyzerNode.m */; };
 		0527063A17CD852A00E6A5D8 /* EXViewAnalyzerOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527063917CD852A00E6A5D8 /* EXViewAnalyzerOutlineView.m */; };
+		0527064617CD94B800E6A5D8 /* EXExecutableBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527064117CD94B800E6A5D8 /* EXExecutableBinary.m */; };
+		0527064717CD94B800E6A5D8 /* EXMachO.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527064317CD94B800E6A5D8 /* EXMachO.m */; };
+		0527064817CD94B800E6A5D8 /* EXUniversalBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527064517CD94B800E6A5D8 /* EXUniversalBinary.m */; };
 		0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 0544E85617C9960100F961BD /* eXcodePlugin.m */; };
 		057F636017C991AE00406854 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057F635F17C991AE00406854 /* Cocoa.framework */; };
 		057F636A17C991AE00406854 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 057F636817C991AE00406854 /* InfoPlist.strings */; };
@@ -73,6 +76,13 @@
 		0527063617CD62AB00E6A5D8 /* EXViewAnalyzerNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXViewAnalyzerNode.m; sourceTree = "<group>"; };
 		0527063817CD852A00E6A5D8 /* EXViewAnalyzerOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXViewAnalyzerOutlineView.h; sourceTree = "<group>"; };
 		0527063917CD852A00E6A5D8 /* EXViewAnalyzerOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXViewAnalyzerOutlineView.m; sourceTree = "<group>"; };
+		0527064017CD94B800E6A5D8 /* EXExecutableBinary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXExecutableBinary.h; sourceTree = "<group>"; };
+		0527064117CD94B800E6A5D8 /* EXExecutableBinary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXExecutableBinary.m; sourceTree = "<group>"; };
+		0527064217CD94B800E6A5D8 /* EXMachO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXMachO.h; sourceTree = "<group>"; };
+		0527064317CD94B800E6A5D8 /* EXMachO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXMachO.m; sourceTree = "<group>"; };
+		0527064417CD94B800E6A5D8 /* EXUniversalBinary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXUniversalBinary.h; sourceTree = "<group>"; };
+		0527064517CD94B800E6A5D8 /* EXUniversalBinary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXUniversalBinary.m; sourceTree = "<group>"; };
+		0527064C17CD95B900E6A5D8 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = SOURCE_ROOT; };
 		0544E85517C9960100F961BD /* eXcodePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eXcodePlugin.h; sourceTree = "<group>"; };
 		0544E85617C9960100F961BD /* eXcodePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eXcodePlugin.m; sourceTree = "<group>"; };
 		057F635C17C991AE00406854 /* eXcode.xcplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = eXcode.xcplugin; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -126,6 +136,19 @@
 			name = "View Analyzer";
 			sourceTree = "<group>";
 		};
+		0527063C17CD944500E6A5D8 /* Mach-O Parsing */ = {
+			isa = PBXGroup;
+			children = (
+				0527064017CD94B800E6A5D8 /* EXExecutableBinary.h */,
+				0527064117CD94B800E6A5D8 /* EXExecutableBinary.m */,
+				0527064217CD94B800E6A5D8 /* EXMachO.h */,
+				0527064317CD94B800E6A5D8 /* EXMachO.m */,
+				0527064417CD94B800E6A5D8 /* EXUniversalBinary.h */,
+				0527064517CD94B800E6A5D8 /* EXUniversalBinary.m */,
+			);
+			name = "Mach-O Parsing";
+			sourceTree = "<group>";
+		};
 		057F635317C991AE00406854 = {
 			isa = PBXGroup;
 			children = (
@@ -174,7 +197,9 @@
 				05CF529117C9BB0C009FB820 /* EXLog.m */,
 				0527062717CA8EF500E6A5D8 /* View Analyzer */,
 				05CF529317C9BFB2009FB820 /* Runtime Patching */,
+				0527063C17CD944500E6A5D8 /* Mach-O Parsing */,
 				057F636617C991AE00406854 /* Supporting Files */,
+				0527064C17CD95B900E6A5D8 /* README.txt */,
 			);
 			path = eXcode;
 			sourceTree = "<group>";
@@ -303,6 +328,9 @@
 				0527062D17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.m in Sources */,
 				0527063717CD62AB00E6A5D8 /* EXViewAnalyzerNode.m in Sources */,
 				0527063A17CD852A00E6A5D8 /* EXViewAnalyzerOutlineView.m in Sources */,
+				0527064617CD94B800E6A5D8 /* EXExecutableBinary.m in Sources */,
+				0527064717CD94B800E6A5D8 /* EXMachO.m in Sources */,
+				0527064817CD94B800E6A5D8 /* EXUniversalBinary.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
