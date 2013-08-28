@@ -14,6 +14,11 @@
 		0527064617CD94B800E6A5D8 /* EXExecutableBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527064117CD94B800E6A5D8 /* EXExecutableBinary.m */; };
 		0527064717CD94B800E6A5D8 /* EXMachO.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527064317CD94B800E6A5D8 /* EXMachO.m */; };
 		0527064817CD94B800E6A5D8 /* EXUniversalBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527064517CD94B800E6A5D8 /* EXUniversalBinary.m */; };
+		0527064E17CDB47900E6A5D8 /* IDEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0527064D17CDB47900E6A5D8 /* IDEKit.framework */; };
+		0527064F17CDB4EA00E6A5D8 /* IDEKit.framework in Sources */ = {isa = PBXBuildFile; fileRef = 0527064D17CDB47900E6A5D8 /* IDEKit.framework */; };
+		0527065317CDB59C00E6A5D8 /* EXPreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527065217CDB59C00E6A5D8 /* EXPreferencesController.m */; };
+		0527065617CDB68C00E6A5D8 /* DVTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0527065517CDB68C00E6A5D8 /* DVTKit.framework */; };
+		0527065717CDB69800E6A5D8 /* DVTKit.framework in Sources */ = {isa = PBXBuildFile; fileRef = 0527065517CDB68C00E6A5D8 /* DVTKit.framework */; };
 		0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 0544E85617C9960100F961BD /* eXcodePlugin.m */; };
 		0556AAF117CD9C4D000A5197 /* FScript.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
 		0556AAF217CD9C59000A5197 /* FScript.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
@@ -39,7 +44,7 @@
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(CURRENT_ARCH)/$(INPUT_FILE_BASE)/header-stamp.h",
 			);
-			script = "STAMP=\"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}/header-stamp.h\"\nif [ \"${STAMP}\" -nt \"${INPUT_FILE_PATH}\" ]; then\n    exit 0\nfi\n\nmkdir -p \"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}\"\n${SRCROOT}/bin/class-dump --arch \"${CURRENT_ARCH}\" -H \"${INPUT_FILE_PATH}\" -o \"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}\"\ntouch \"${STAMP}\"";
+			script = "DEST=\"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}\"\nSTAMP=\"${DEST}/header-stamp.h\"\nif [ \"${STAMP}\" -nt \"${INPUT_FILE_PATH}\" ]; then\n    exit 0\nfi\n\nmkdir -p \"${DEST}\"\n${SRCROOT}/bin/class-dump --arch \"${CURRENT_ARCH}\" -H \"${INPUT_FILE_PATH}\" -o \"${DEST}\"\n\npushd \"${DEST}\" >/dev/null\n\n# Fix up any bad method names\nfor f in *.h; do\n    sed 's/\\.cxx_destruct/_cxx_destruct/g' < \"${f}\" > \"${f}.new\"\n    mv \"${f}.new\" \"${f}\"\ndone\n\n# Generate stub headers for any missing headers\nfor f in `grep -h -E '^#import[ \\t.*]\"' *.h | sort | uniq  | cut -f 2 -d ' ' | awk -F \\\" '{print $2}'`; do\n    if [ ! -f \"${f}\" ]; then\n        base=$(echo \"$f\" | sed 's/\\.h$//g')\n        if [ -f \"${base}-Protocol.h\" ]; then\n            echo \"#import \\\"${base}-Protocol.h\\\"\" > \"${f}\"\n        else\n            echo '#import <Cocoa/Cocoa.h>' > \"${f}\"\n        fi\n    fi\ndone\npopd >/dev/null\n\ntouch \"${STAMP}\"";
 		};
 		05E55C5817C9D6FA00BC8510 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -86,6 +91,10 @@
 		0527064417CD94B800E6A5D8 /* EXUniversalBinary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXUniversalBinary.h; sourceTree = "<group>"; };
 		0527064517CD94B800E6A5D8 /* EXUniversalBinary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXUniversalBinary.m; sourceTree = "<group>"; };
 		0527064C17CD95B900E6A5D8 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = SOURCE_ROOT; };
+		0527064D17CDB47900E6A5D8 /* IDEKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IDEKit.framework; path = ../Frameworks/IDEKit.framework; sourceTree = DEVELOPER_DIR; };
+		0527065117CDB59C00E6A5D8 /* EXPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXPreferencesController.h; sourceTree = "<group>"; };
+		0527065217CDB59C00E6A5D8 /* EXPreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXPreferencesController.m; sourceTree = "<group>"; };
+		0527065517CDB68C00E6A5D8 /* DVTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DVTKit.framework; path = ../SharedFrameworks/DVTKit.framework; sourceTree = DEVELOPER_DIR; };
 		0544E85517C9960100F961BD /* eXcodePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eXcodePlugin.h; sourceTree = "<group>"; };
 		0544E85617C9960100F961BD /* eXcodePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eXcodePlugin.m; sourceTree = "<group>"; };
 		0556AAF017CD9C4D000A5197 /* FScript.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FScript.framework; sourceTree = "<group>"; };
@@ -97,7 +106,6 @@
 		057F636717C991AE00406854 /* eXcode-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "eXcode-Info.plist"; sourceTree = "<group>"; };
 		057F636917C991AE00406854 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DevToolsCore.framework; path = ../OtherFrameworks/DevToolsCore.framework; sourceTree = DEVELOPER_DIR; };
-		05CF528F17C9B123009FB820 /* NSObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSObject.h; sourceTree = "<group>"; };
 		05CF529017C9BB0C009FB820 /* EXLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXLog.h; sourceTree = "<group>"; };
 		05CF529117C9BB0C009FB820 /* EXLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXLog.m; sourceTree = "<group>"; };
 		05CF529417C9BFD7009FB820 /* EXPatchMaster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXPatchMaster.h; sourceTree = "<group>"; };
@@ -121,6 +129,8 @@
 				05CF529F17C9D5C0009FB820 /* PLBlockIMP.framework in Frameworks */,
 				057F636017C991AE00406854 /* Cocoa.framework in Frameworks */,
 				05CF528D17C9AEF6009FB820 /* DevToolsCore.framework in Frameworks */,
+				0527064E17CDB47900E6A5D8 /* IDEKit.framework in Frameworks */,
+				0527065617CDB68C00E6A5D8 /* DVTKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,6 +162,15 @@
 				0527064517CD94B800E6A5D8 /* EXUniversalBinary.m */,
 			);
 			name = "Mach-O Parsing";
+			sourceTree = "<group>";
+		};
+		0527065017CDB58800E6A5D8 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				0527065117CDB59C00E6A5D8 /* EXPreferencesController.h */,
+				0527065217CDB59C00E6A5D8 /* EXPreferencesController.m */,
+			);
+			name = Preferences;
 			sourceTree = "<group>";
 		};
 		057F635317C991AE00406854 = {
@@ -200,6 +219,7 @@
 				0544E85617C9960100F961BD /* eXcodePlugin.m */,
 				05CF529017C9BB0C009FB820 /* EXLog.h */,
 				05CF529117C9BB0C009FB820 /* EXLog.m */,
+				0527065017CDB58800E6A5D8 /* Preferences */,
 				0527062717CA8EF500E6A5D8 /* View Analyzer */,
 				05CF529317C9BFB2009FB820 /* Runtime Patching */,
 				0527063C17CD944500E6A5D8 /* Mach-O Parsing */,
@@ -221,8 +241,9 @@
 		05CF528917C9AEA3009FB820 /* Private Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0527065517CDB68C00E6A5D8 /* DVTKit.framework */,
+				0527064D17CDB47900E6A5D8 /* IDEKit.framework */,
 				05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */,
-				05CF528F17C9B123009FB820 /* NSObject.h */,
 			);
 			path = "Private Frameworks";
 			sourceTree = "<group>";
@@ -326,7 +347,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				05CF529217C9BB0C009FB820 /* EXLog.m in Sources */,
-				05CF528E17C9AF10009FB820 /* DevToolsCore.framework in Sources */,
 				0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */,
 				05CF529617C9BFD7009FB820 /* EXPatchMaster.m in Sources */,
 				05E55C5A17C9D79900BC8510 /* blockimp_x86_64.tramp in Sources */,
@@ -337,6 +357,10 @@
 				0527064617CD94B800E6A5D8 /* EXExecutableBinary.m in Sources */,
 				0527064717CD94B800E6A5D8 /* EXMachO.m in Sources */,
 				0527064817CD94B800E6A5D8 /* EXUniversalBinary.m in Sources */,
+				0527065317CDB59C00E6A5D8 /* EXPreferencesController.m in Sources */,
+				05CF528E17C9AF10009FB820 /* DevToolsCore.framework in Sources */,
+				0527064F17CDB4EA00E6A5D8 /* IDEKit.framework in Sources */,
+				0527065717CDB69800E6A5D8 /* DVTKit.framework in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,6 +396,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/Dependencies";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -413,6 +438,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/Dependencies";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -433,9 +459,9 @@
 				EX_BUILD_TYPE = DEBUG;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/landonf/Documents/Code/Personal/eXcode,
-					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/OtherFrameworks",
-					/Users/landonf/Documents/Code/Personal/eXcode/Dependencies,
+					"$(DEVELOPER_DIR)/../Frameworks",
+					"$(DEVELOPER_DIR)/../OtherFrameworks",
+					"$(DEVELOPER_DIR)/../SharedFrameworks",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "EX_BUILD_$(EX_BUILD_TYPE)=1";
 				INFOPLIST_FILE = "eXcode/eXcode-Info.plist";
@@ -453,9 +479,9 @@
 				EX_BUILD_TYPE = RELEASE;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/landonf/Documents/Code/Personal/eXcode,
-					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/OtherFrameworks",
-					/Users/landonf/Documents/Code/Personal/eXcode/Dependencies,
+					"$(DEVELOPER_DIR)/../Frameworks",
+					"$(DEVELOPER_DIR)/../OtherFrameworks",
+					"$(DEVELOPER_DIR)/../SharedFrameworks",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "EX_BUILD_$(EX_BUILD_TYPE)=1";
 				INFOPLIST_FILE = "eXcode/eXcode-Info.plist";
