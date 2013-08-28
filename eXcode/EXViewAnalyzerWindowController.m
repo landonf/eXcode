@@ -105,6 +105,7 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
 // EXPluginUnloadNotification notification
 - (void) handleUnloadNotification: (NSNotification *) notification {
     @autoreleasepool {
+        [_outlineView setDataSource: nil];
         [self close];
     }
 }
