@@ -119,6 +119,9 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     @autoreleasepool {
         [_outlineView setDataSource: nil];
         [_outlineView removeFromSuperview];
+        
+        for (NSWindow *window in _interpreterWindows)
+            [window close];
 
         [self close];
     }
@@ -158,7 +161,7 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     [fscriptWindow setDelegate: self];
     [_interpreterWindows addObject: fscriptWindow];
     
-    [[fscriptView interpreter] browse: node];
+    [[fscriptView interpreter] browse: node.address];
     
     /* Pop the console */
     [fscriptWindow orderFront: nil];
