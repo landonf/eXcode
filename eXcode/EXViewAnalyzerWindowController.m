@@ -188,7 +188,7 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     
     NSMenu *rowMenu = [[NSMenu alloc] initWithTitle:@"View Analzyer"];
     
-    [[rowMenu addItemWithTitle: @"F-Script Console" action: @selector(openInFScriptConsole:) keyEquivalent: @""] setRepresentedObject: node];
+    [[rowMenu addItemWithTitle: @"Examine in F-Script Console" action: @selector(openInFScriptConsole:) keyEquivalent: @""] setRepresentedObject: node];
 
     [[rowMenu addItemWithTitle: @"Open in Hopper" action: @selector(openWithHopper:) keyEquivalent: @""] setRepresentedObject: node];
 
