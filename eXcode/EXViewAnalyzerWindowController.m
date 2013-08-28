@@ -189,8 +189,12 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     NSMenu *rowMenu = [[NSMenu alloc] initWithTitle:@"View Analzyer"];
     
     [[rowMenu addItemWithTitle: @"Examine in F-Script Console" action: @selector(openInFScriptConsole:) keyEquivalent: @""] setRepresentedObject: node];
+    
+    NSMenuItem *decompileItem = [rowMenu addItemWithTitle: @"Open with ..." action: @selector(submenuAction:) keyEquivalent: @""];
+    NSMenu *decompileMenu = [[NSMenu alloc] init];
+    [decompileItem setSubmenu: decompileMenu];
 
-    [[rowMenu addItemWithTitle: @"Open in Hopper" action: @selector(openWithHopper:) keyEquivalent: @""] setRepresentedObject: node];
+    [[decompileMenu addItemWithTitle: @"Hopper" action: @selector(openWithHopper:) keyEquivalent: @""] setRepresentedObject: node];
 
     /* Determine the available binaries; we only offer IDA 32/64 depending on availability */
     NSError *error;
@@ -211,10 +215,10 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     }
     
     if (has32)
-        [[rowMenu addItemWithTitle: @"Open in IDA Pro (32-bit)" action: @selector(openWithIDA32:) keyEquivalent: @""] setRepresentedObject: node];
+        [[decompileMenu addItemWithTitle: @"IDA Pro (32-bit)" action: @selector(openWithIDA32:) keyEquivalent: @""] setRepresentedObject: node];
     
     if (has64)
-        [[rowMenu addItemWithTitle: @"Open in IDA Pro (64-bit)" action: @selector(openWithIDA64:) keyEquivalent: @""] setRepresentedObject: node];
+        [[decompileMenu addItemWithTitle: @"IDA Pro (64-bit)" action: @selector(openWithIDA64:) keyEquivalent: @""] setRepresentedObject: node];
     
     return rowMenu;
 }
