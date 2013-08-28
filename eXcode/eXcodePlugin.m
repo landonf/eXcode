@@ -32,8 +32,15 @@
 #import "DevToolsCore/header-stamp.h" // Xcode dependency hack
 #import "DevToolsCore/XCPluginManager.h"
 
+#import <FScript/FScript.h>
+
 #import "EXPatchMaster.h"
 #import "EXViewAnalyzerWindowController.h"
+
+/* See comment in F-Script initialization below */
+@interface NSObject (private_IBUICanvasLayoutPersistence)
+- (NSPoint) ibExternalLastKnownCanvasFrameOrigin;
+@end
 
 /**
  * Notification sent synchronously when the eXcode plugin is to be unloaded. Listeners must immediately deregister
@@ -48,6 +55,7 @@ static void updated_plugin_callback (ConstFSEventStreamRef streamRef, void *clie
 
 @implementation eXcodePlugin {
     EXViewAnalyzerWindowController *_analyzerWindowController;
+    FScriptMenuItem *_fscriptMenu;
 }
 
 static eXcodePlugin *sharedPlugin = nil;
@@ -85,22 +93,38 @@ static eXcodePlugin *sharedPlugin = nil;
 #if EX_BUILD_DEBUG
     /* In debug builds, we automatically reload the plugin whenever it is updated. */
     [self enablePluginReloader];
-#endif
     
     /* Fire up the analyzer window */
     _analyzerWindowController = [[EXViewAnalyzerWindowController alloc] init];
     [_analyzerWindowController showWindow: nil];
+#endif
+    
+    
+    /* Inject F-Script menu
+     *
+     * Xcode's IDEInterfaceBuilderCocoaTouchIntegration includes an NSObject category that registers
+     * an assortment of ib-related methods for abstract methods, and then triggers non-exception-based
+     * abort() when they are called. This triggers a crash when F-Script introspects defined object
+     * properties. This ugly hack works around the issue; we can re-evaluate this in favor for a more
+     * surgical approach at later date.
+     */
+    [NSObject ex_patchInstanceSelector: @selector(ibExternalLastKnownCanvasFrameOrigin) withReplacementBlock: ^(EXPatchIMP *patch) {
+        return NSZeroPoint;
+    }];
+    _fscriptMenu = [[FScriptMenuItem alloc] init];
+    [[NSApp mainMenu] addItem: _fscriptMenu];
 
     return self;
 }
 
 - (void) dealloc {
-    // watty wat
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 // EXPluginUnloadNotification notifications
 - (void) handleUnloadNotification: (NSNotification *) notification {
+    [[NSApp mainMenu] removeItem: _fscriptMenu];
+
     /* Trigger deallocation (assuming the refcount hits 0, which is really ought to) */
     sharedPlugin = nil;
 }
