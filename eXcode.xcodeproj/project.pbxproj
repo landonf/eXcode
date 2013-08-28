@@ -10,6 +10,7 @@
 		0527062D17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527062B17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.m */; };
 		0527062E17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0527062C17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib */; };
 		0527063717CD62AB00E6A5D8 /* EXViewAnalyzerNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527063617CD62AB00E6A5D8 /* EXViewAnalyzerNode.m */; };
+		0527063A17CD852A00E6A5D8 /* EXViewAnalyzerOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527063917CD852A00E6A5D8 /* EXViewAnalyzerOutlineView.m */; };
 		0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 0544E85617C9960100F961BD /* eXcodePlugin.m */; };
 		057F636017C991AE00406854 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057F635F17C991AE00406854 /* Cocoa.framework */; };
 		057F636A17C991AE00406854 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 057F636817C991AE00406854 /* InfoPlist.strings */; };
@@ -70,6 +71,8 @@
 		0527062C17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EXViewAnalyzerWindowController.xib; sourceTree = "<group>"; };
 		0527063517CD62AB00E6A5D8 /* EXViewAnalyzerNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXViewAnalyzerNode.h; sourceTree = "<group>"; };
 		0527063617CD62AB00E6A5D8 /* EXViewAnalyzerNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXViewAnalyzerNode.m; sourceTree = "<group>"; };
+		0527063817CD852A00E6A5D8 /* EXViewAnalyzerOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXViewAnalyzerOutlineView.h; sourceTree = "<group>"; };
+		0527063917CD852A00E6A5D8 /* EXViewAnalyzerOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXViewAnalyzerOutlineView.m; sourceTree = "<group>"; };
 		0544E85517C9960100F961BD /* eXcodePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eXcodePlugin.h; sourceTree = "<group>"; };
 		0544E85617C9960100F961BD /* eXcodePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eXcodePlugin.m; sourceTree = "<group>"; };
 		057F635C17C991AE00406854 /* eXcode.xcplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = eXcode.xcplugin; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,6 +118,8 @@
 				0527062A17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.h */,
 				0527062B17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.m */,
 				0527062C17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib */,
+				0527063817CD852A00E6A5D8 /* EXViewAnalyzerOutlineView.h */,
+				0527063917CD852A00E6A5D8 /* EXViewAnalyzerOutlineView.m */,
 				0527063517CD62AB00E6A5D8 /* EXViewAnalyzerNode.h */,
 				0527063617CD62AB00E6A5D8 /* EXViewAnalyzerNode.m */,
 			);
@@ -297,6 +302,7 @@
 				05E55C5C17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp in Sources */,
 				0527062D17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.m in Sources */,
 				0527063717CD62AB00E6A5D8 /* EXViewAnalyzerNode.m in Sources */,
+				0527063A17CD852A00E6A5D8 /* EXViewAnalyzerOutlineView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -31,13 +31,16 @@
 
 #import "EXPatchMaster.h"
 #import "EXViewAnalyzerNode.h"
+#import "EXViewAnalyzerOutlineView.h"
 
 #import "eXcodePlugin.h"
+
+#import <objc/runtime.h>
 
 /** Notification sent when a new vew is targeted by the EXViewAnalyzer. The targeted view will be available via -[NSNotification object]. */
 static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTargetedViewNotification";
 
-@interface EXViewAnalyzerWindowController (NSOutlineViewDataSource) <NSOutlineViewDataSource> @end
+@interface EXViewAnalyzerWindowController (NSOutlineViewDataSource) <EXViewAnalyzerOutlineViewDataSource> @end
 
 /**
  * Manages the View Analyzer window.
@@ -106,6 +109,8 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
 - (void) handleUnloadNotification: (NSNotification *) notification {
     @autoreleasepool {
         [_outlineView setDataSource: nil];
+        [_outlineView removeFromSuperview];
+
         [self close];
     }
 }
@@ -121,9 +126,32 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
 }
 
+- (void) openWithHopper: (NSMenuItem *) item {
+    EXViewAnalyzerNode *node = [item representedObject];
+    [[NSWorkspace sharedWorkspace] openFile: node.codePath withApplication: @"Hopper Disassembler" andDeactivate: YES];
+}
+
+- (void) openWithIDA: (NSMenuItem *) item {
+    EXViewAnalyzerNode *node = [item representedObject];
+    [[NSWorkspace sharedWorkspace] openFile: node.codePath withApplication: @"idaq64" andDeactivate: YES];
+}
+
 @end
 
 @implementation EXViewAnalyzerWindowController (NSOutlineViewDataSource)
+
+- (NSMenu *) ex_outlineView: (EXViewAnalyzerOutlineView *) outlineView menuForRow: (NSInteger) row {
+    EXViewAnalyzerNode *node = [_outlineView itemAtRow: row];
+    if (node == nil)
+        return nil;
+    
+    NSMenu *rowMenu = [[NSMenu alloc] initWithTitle:@"View Analzyer"];
+
+    [[rowMenu addItemWithTitle: @"Open in Hopper" action: @selector(openWithHopper:) keyEquivalent: @""] setRepresentedObject: node];
+    [[rowMenu addItemWithTitle: @"Open in IDA Pro" action: @selector(openWithIDA:) keyEquivalent: @""] setRepresentedObject: node];
+    
+    return rowMenu;
+}
 
 - (NSInteger) outlineView: (NSOutlineView *) outlineView numberOfChildrenOfItem: (id) item {
     EXViewAnalyzerNode *node = item;
