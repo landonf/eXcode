@@ -415,6 +415,13 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Werror",
+					"-Wextra",
+					"-Wno-missing-method-return-type",
+					"-Wno-unused-parameter",
+				);
 			};
 			name = Debug;
 		};
@@ -449,6 +456,13 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Werror",
+					"-Wextra",
+					"-Wno-missing-method-return-type",
+					"-Wno-unused-parameter",
+				);
 			};
 			name = Release;
 		};
