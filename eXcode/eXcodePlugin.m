@@ -39,6 +39,7 @@
 
 /* See comment in F-Script initialization below */
 @interface NSObject (private_IBUICanvasLayoutPersistence)
++ (NSPoint) ibExternalLastKnownCanvasFrameOrigin;
 - (NSPoint) ibExternalLastKnownCanvasFrameOrigin;
 @end
 
@@ -108,9 +109,9 @@ static eXcodePlugin *sharedPlugin = nil;
      * properties. This ugly hack works around the issue; we can re-evaluate this in favor for a more
      * surgical approach at later date.
      */
-    [NSObject ex_patchInstanceSelector: @selector(ibExternalLastKnownCanvasFrameOrigin) withReplacementBlock: ^(EXPatchIMP *patch) {
-        return NSZeroPoint;
-    }];
+    [NSObject ex_patchSelector: @selector(ibExternalLastKnownCanvasFrameOrigin) withReplacementBlock: ^(EXPatchIMP *patch) { return NSZeroPoint; }];
+    [NSObject ex_patchInstanceSelector: @selector(ibExternalLastKnownCanvasFrameOrigin) withReplacementBlock: ^(EXPatchIMP *patch) { return NSZeroPoint; }];
+
     _fscriptMenu = [[FScriptMenuItem alloc] init];
     [[NSApp mainMenu] addItem: _fscriptMenu];
 
