@@ -13,63 +13,52 @@
 	<dict>
 		<key>extensions</key>
 		<dict>
-			<key>public.vcs.hg</key>
+			<key>eXcode.CmdHandler.ExampleDebugMenuEntry</key>
 			<dict>
+				<key>handlerClass</key>
+				<string>EXDebugMenuCommandHandler</string>
 				<key>id</key>
-				<string>public.vcs.hg</string>
-				<key>supportsFineGrainedCheckouts</key>
-				<string>false</string>
+				<string>eXcode.CmdHandler.ExampleDebugMenuEntry</string>
+				<key>cmdDefinition</key>
+				<string>eXcode.CmdDefinition.ExampleDebugMenuEntry</string>
+				<key>name</key>
+				<string>Add Ancestor to Comparison Command Handler</string>
+				<key>point</key>
+				<string>Xcode.IDEKit.CmdHandler</string>
 				<key>version</key>
 				<string>0.1</string>
-				<key>protocol</key>
-				<array>
-					<dict>
-						<key>name</key>
-						<string>git</string>
-					</dict>
-					<dict>
-						<key>name</key>
-						<string>git+ssh</string>
-					</dict>
-					<dict>
-						<key>name</key>
-						<string>http</string>
-					</dict>
-					<dict>
-						<key>name</key>
-						<string>https</string>
-					</dict>
-					<dict>
-						<key>name</key>
-						<string>file</string>
-					</dict>
-					<dict>
-						<key>name</key>
-						<string>ssh</string>
-					</dict>
-				</array>
-				<key>distributed</key>
-				<string>true</string>
-				<key>supportsRemotes</key>
-				<string>true</string>
-				<key>title</key>
-				<string>public.vcs.git.title</string>
-				<key>requiresUsernameInURL</key>
-				<string>true</string>
-				<key>supportsLocalBlame</key>
-				<string>true</string>
-				<key>delegateClass</key>
-				<string>eXcodePlugin</string>
-				<key>directoryIdentifier</key>
-				<string>.hg</string>
-				<key>point</key>
-				<string>Xcode.IDEFoundation.IDESourceControl</string>
-				<key>repositoryLayoutNeeded</key>
-				<string>false</string>
+			</dict>
+			<key>eXcode.DebugMenuItemDefinition.ExampleDebugMenuEntry</key>
+			<dict>
 				<key>name</key>
-				<string>eXcodePlugin</string>
-				<key>commitMessageRequired</key>
-				<string>false</string>
+				<string>Example Debug Menu Item</string>
+				<key>id</key>
+				<string>eXcode.DebugMenuItemDefinition.ExampleDebugMenuEntry</string>
+				<key>commandIdentifier</key>
+				<string>eXcode.CmdDefinition.ExampleDebugMenuEntry</string>
+				<key>type</key>
+				<string>command</string>
+				<key>point</key>
+				<string>Xcode.IDEKit.InternalMenuItemDefinition</string>
+				<key>version</key>
+				<string>0.1</string>
+			</dict>
+			<key>eXcode.CmdDefinition.ExampleDebugMenuEntry</key>
+			<dict>
+				<key>action</key>
+				<string>exampleDebugMenuEntry:</string>
+				<key>id</key>
+				<string>eXcode.CmdDefinition.ExampleDebugMenuEntry</string>
+				<key>point</key>
+				<string>Xcode.IDEKit.CmdDefinition</string>
+				<key>title</key>
+				<string>Frobulate the Xcode Spiffinator</string>
+				<key>menuItem</key>
+				<array/>
+				<key>version</key>
+				<string>0.1</string>
+				<key>name</key>
+				<string>Frobulate the Xcode Spiffinator</string>
 			</dict>
 		</dict>
 		<key>extension-points</key>

@@ -23,6 +23,7 @@
 		0556AAF117CD9C4D000A5197 /* FScript.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
 		0556AAF217CD9C59000A5197 /* FScript.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
 		055D238317D175EC0026C946 /* eXcode.xcplugindata in Resources */ = {isa = PBXBuildFile; fileRef = 055D238217D175EC0026C946 /* eXcode.xcplugindata */; };
+		055D238617D2437F0026C946 /* EXDebugMenuCommandHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 055D238517D2437F0026C946 /* EXDebugMenuCommandHandler.m */; };
 		057F636017C991AE00406854 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057F635F17C991AE00406854 /* Cocoa.framework */; };
 		057F636A17C991AE00406854 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 057F636817C991AE00406854 /* InfoPlist.strings */; };
 		05CF528D17C9AEF6009FB820 /* DevToolsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */; };
@@ -100,6 +101,8 @@
 		0544E85617C9960100F961BD /* eXcodePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eXcodePlugin.m; sourceTree = "<group>"; };
 		0556AAF017CD9C4D000A5197 /* FScript.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FScript.framework; sourceTree = "<group>"; };
 		055D238217D175EC0026C946 /* eXcode.xcplugindata */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = eXcode.xcplugindata; sourceTree = "<group>"; };
+		055D238417D2437F0026C946 /* EXDebugMenuCommandHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXDebugMenuCommandHandler.h; sourceTree = "<group>"; };
+		055D238517D2437F0026C946 /* EXDebugMenuCommandHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXDebugMenuCommandHandler.m; sourceTree = "<group>"; };
 		057F635C17C991AE00406854 /* eXcode.ideplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = eXcode.ideplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		057F635F17C991AE00406854 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		057F636217C991AE00406854 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -219,6 +222,8 @@
 			children = (
 				0544E85517C9960100F961BD /* eXcodePlugin.h */,
 				0544E85617C9960100F961BD /* eXcodePlugin.m */,
+				055D238417D2437F0026C946 /* EXDebugMenuCommandHandler.h */,
+				055D238517D2437F0026C946 /* EXDebugMenuCommandHandler.m */,
 				05CF529017C9BB0C009FB820 /* EXLog.h */,
 				05CF529117C9BB0C009FB820 /* EXLog.m */,
 				0527065017CDB58800E6A5D8 /* Preferences */,
@@ -362,6 +367,7 @@
 				0527064717CD94B800E6A5D8 /* EXMachO.m in Sources */,
 				0527064817CD94B800E6A5D8 /* EXUniversalBinary.m in Sources */,
 				0527065317CDB59C00E6A5D8 /* EXPreferencesController.m in Sources */,
+				055D238617D2437F0026C946 /* EXDebugMenuCommandHandler.m in Sources */,
 				05CF528E17C9AF10009FB820 /* DevToolsCore.framework in Sources */,
 				0527064F17CDB4EA00E6A5D8 /* IDEKit.framework in Sources */,
 				0527065717CDB69800E6A5D8 /* DVTKit.framework in Sources */,
