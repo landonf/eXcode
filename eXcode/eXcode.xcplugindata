@@ -13,14 +13,14 @@
 	<dict>
 		<key>extensions</key>
 		<dict>
-			<key>eXcode.IDESourceEditor.CmdHandler.SwitchDiffingAlgorithm</key>
+			<key>eXcode.CmdHandler.ExampleDebugMenuEntry</key>
 			<dict>
 				<key>handlerClass</key>
-				<string>eXcodePlugin</string>
+				<string>EXDebugMenuCommandHandler</string>
 				<key>id</key>
-				<string>eXcode.IDESourceEditor.CmdHandler.SwitchDiffingAlgorithm</string>
+				<string>eXcode.CmdHandler.ExampleDebugMenuEntry</string>
 				<key>cmdDefinition</key>
-				<string>eXcode.IDESourceEditor.CmdDefinition.SwitchDiffingAlgorithm</string>
+				<string>eXcode.CmdDefinition.ExampleDebugMenuEntry</string>
 				<key>name</key>
 				<string>Add Ancestor to Comparison Command Handler</string>
 				<key>point</key>
@@ -28,14 +28,14 @@
 				<key>version</key>
 				<string>0.1</string>
 			</dict>
-			<key>eXcode.IDESourceEditor.DebugMenuItemDefinition.SwitchDiffingAlgorithm</key>
+			<key>eXcode.DebugMenuItemDefinition.ExampleDebugMenuEntry</key>
 			<dict>
 				<key>name</key>
-				<string>Switch Diffing Algorithm Debug Menu Item</string>
+				<string>Example Debug Menu Item</string>
 				<key>id</key>
-				<string>eXcode.IDESourceEditor.DebugMenuItemDefinition.SwitchDiffingAlgorithm</string>
+				<string>eXcode.DebugMenuItemDefinition.ExampleDebugMenuEntry</string>
 				<key>commandIdentifier</key>
-				<string>eXcode.IDESourceEditor.CmdDefinition.SwitchDiffingAlgorithm</string>
+				<string>eXcode.CmdDefinition.ExampleDebugMenuEntry</string>
 				<key>type</key>
 				<string>command</string>
 				<key>point</key>
@@ -43,12 +43,12 @@
 				<key>version</key>
 				<string>0.1</string>
 			</dict>
-			<key>eXcode.IDESourceEditor.CmdDefinition.SwitchDiffingAlgorithm</key>
+			<key>eXcode.CmdDefinition.ExampleDebugMenuEntry</key>
 			<dict>
 				<key>action</key>
-				<string>switchSpiffingAlgorithm:</string>
+				<string>exampleDebugMenuEntry:</string>
 				<key>id</key>
-				<string>eXcode.IDESourceEditor.CmdDefinition.SwitchDiffingAlgorithm</string>
+				<string>eXcode.CmdDefinition.ExampleDebugMenuEntry</string>
 				<key>point</key>
 				<string>Xcode.IDEKit.CmdDefinition</string>
 				<key>title</key>
@@ -58,7 +58,7 @@
 				<key>version</key>
 				<string>0.1</string>
 				<key>name</key>
-				<string>Switch Spiffing Algorithm</string>
+				<string>Frobulate the Xcode Spiffinator</string>
 			</dict>
 		</dict>
 		<key>extension-points</key>
