@@ -61,6 +61,15 @@ static void updated_plugin_callback (ConstFSEventStreamRef streamRef, void *clie
 
 static eXcodePlugin *sharedPlugin = nil;
 
+- (void) switchSpiffingAlgorithm: (id) sender {
+    EXLog(@"SWITCH WITH SENDER: %@", sender);
+}
+
++ (id)handlerForAction:(SEL)arg1 withSelectionSource:(id)arg2 {
+    EXLog(@"HANDLER FOR %s, %@", sel_getName(arg1), arg2);
+    return [self sharedPlugin];
+}
+
 /**
  * Return the shared plugin instance.
  */
