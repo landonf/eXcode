@@ -22,6 +22,7 @@
 		0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 0544E85617C9960100F961BD /* eXcodePlugin.m */; };
 		0556AAF117CD9C4D000A5197 /* FScript.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
 		0556AAF217CD9C59000A5197 /* FScript.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
+		055D238317D175EC0026C946 /* eXcode.xcplugindata in Resources */ = {isa = PBXBuildFile; fileRef = 055D238217D175EC0026C946 /* eXcode.xcplugindata */; };
 		057F636017C991AE00406854 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057F635F17C991AE00406854 /* Cocoa.framework */; };
 		057F636A17C991AE00406854 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 057F636817C991AE00406854 /* InfoPlist.strings */; };
 		05CF528D17C9AEF6009FB820 /* DevToolsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */; };
@@ -98,7 +99,8 @@
 		0544E85517C9960100F961BD /* eXcodePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eXcodePlugin.h; sourceTree = "<group>"; };
 		0544E85617C9960100F961BD /* eXcodePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eXcodePlugin.m; sourceTree = "<group>"; };
 		0556AAF017CD9C4D000A5197 /* FScript.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FScript.framework; sourceTree = "<group>"; };
-		057F635C17C991AE00406854 /* eXcode.xcplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = eXcode.xcplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		055D238217D175EC0026C946 /* eXcode.xcplugindata */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = eXcode.xcplugindata; sourceTree = "<group>"; };
+		057F635C17C991AE00406854 /* eXcode.ideplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = eXcode.ideplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		057F635F17C991AE00406854 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		057F636217C991AE00406854 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		057F636317C991AE00406854 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -188,7 +190,7 @@
 		057F635D17C991AE00406854 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				057F635C17C991AE00406854 /* eXcode.xcplugin */,
+				057F635C17C991AE00406854 /* eXcode.ideplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -234,6 +236,7 @@
 			children = (
 				057F636717C991AE00406854 /* eXcode-Info.plist */,
 				057F636817C991AE00406854 /* InfoPlist.strings */,
+				055D238217D175EC0026C946 /* eXcode.xcplugindata */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -300,7 +303,7 @@
 			);
 			name = eXcode;
 			productName = eXcode;
-			productReference = 057F635C17C991AE00406854 /* eXcode.xcplugin */;
+			productReference = 057F635C17C991AE00406854 /* eXcode.ideplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -334,6 +337,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				055D238317D175EC0026C946 /* eXcode.xcplugindata in Resources */,
 				057F636A17C991AE00406854 /* InfoPlist.strings in Resources */,
 				0527062E17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib in Resources */,
 			);
@@ -482,7 +486,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = xcplugin;
+				WRAPPER_EXTENSION = ideplugin;
 			};
 			name = Debug;
 		};
@@ -502,7 +506,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = xcplugin;
+				WRAPPER_EXTENSION = ideplugin;
 			};
 			name = Release;
 		};

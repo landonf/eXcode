@@ -26,15 +26,16 @@
 	<string>Copyright © 2013 Plausible Labs. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
 	<string>eXcodePlugin</string>
-	<key>XCGCReady</key>
-	<true/>
-	<key>XC4Compatible</key>
-	<true/>
-	<key>XCPluginHasUI</key>
-	<false/>
+	<key>DTXcode</key>
+	<string>0500</string>
 	<key>DVTPlugInCompatibilityUUIDs</key>
 	<array>
 		<string>63FC1C47-140D-42B0-BB4D-A10B2D225574</string>
+	</array>
+	<key>DVTPlugInHostRequirements</key>
+	<array>
+		<string>build-system</string>
+		<string>user-interface</string>
 	</array>
 </dict>
 </plist>
