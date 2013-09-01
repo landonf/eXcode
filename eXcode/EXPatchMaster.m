@@ -36,6 +36,8 @@
 
 #import "EXBlockLayout.h"
 
+#import <mach-o/dyld.h>
+
 #import <objc/runtime.h>
 
 #ifdef __x86_64__
@@ -44,6 +46,9 @@
 #else
 #error Unsupported Architecture
 #endif
+
+/** Notification sent (synchronously) when an image is added. */
+static NSString *EXPatchMasterImageDidLoadNotification = @"EXPatchMasterImageDidLoadNotification";
 
 /* Global lock for our mutable trampoline state. Must be held when accessing the trampoline tables. */
 static pthread_mutex_t blockimp_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -146,6 +151,35 @@ static BOOL ex_imp_removeBlock (IMP anImp) {
     return [[EXPatchMaster master] patchInstancesWithClass: [self class] selector: selector replacementBlock: replacementBlock];
 }
 
+/**
+ * Patch the receiver's @a selector class method, once (and if) @a selector is registered by a loaded Mach-O image. The previously
+ * registered IMP may be fetched via EXPatchMaster::originalIMP:.
+ *
+ * @param selector The selector to patch.
+ * @param replacementBlock The new implementation for @a selector. The first parameter must be a pointer to EXPatchIMP; the
+ * remainder of the parameters must match the original method.
+ *
+ * @return Returns YES on success, or NO if @a selector is not a defined @a cls method.
+ */
++ (void) ex_patchFutureSelector: (SEL) selector withReplacementBlock: (id) replacementBlock {
+    return [[EXPatchMaster master] patchFutureClassWithName: NSStringFromClass([self class]) selector: selector replacementBlock: replacementBlock];
+
+}
+
+/**
+ * Patch the receiver's @a selector instance method, once (and if) @a selector is registered by a loaded Mach-O image.
+ * The previously registered IMP may be fetched via EXPatchMaster::originalIMP:.
+ *
+ * @param selector The selector to patch.
+ * @param replacementBlock The new implementation for @a selector. The first parameter must be a pointer to EXPatchIMP; the
+ * remainder of the parameters must match the original method.
+ *
+ * @return Returns YES on success, or NO if @a selector is not a defined @a cls instance method.
+ */
++ (void) ex_patchFutureInstanceSelector: (SEL) selector withReplacementBlock: (id) replacementBlock {
+    return [[EXPatchMaster master] patchInstancesWithFutureClassName: NSStringFromClass([self class]) selector: selector replacementBlock: replacementBlock];
+}
+
 @end
 
 /**
@@ -154,6 +188,8 @@ static BOOL ex_imp_removeBlock (IMP anImp) {
 @implementation EXPatchMaster {
     /** Lock that must be held when mutating or accessing internal state */
     OSSpinLock _lock;
+    
+    IMP _callbackFunc;
 
     /** Maps class -> set -> selector names. Used to keep track of patches that have already been made,
      * and thus do not require a _restoreBlock to be registered */
@@ -163,9 +199,27 @@ static BOOL ex_imp_removeBlock (IMP anImp) {
      * and thus do not require a _restoreBlock to be registered */
     NSMutableDictionary *_instancePatches;
     
+    /** An array of blocks to be executed on dynamic library load; the blocks are responsible
+     * for applying any pending patches to the newly loaded library */
+    NSMutableArray *_pendingPatches;
+
     /* An array of zero-arg blocks that, when executed, will reverse
      * all previously patched methods. */
     NSMutableArray *_restoreBlocks;
+}
+
+/* Handle dyld image load notifications. These *should* be dispatched after the Objective-C callbacks have been
+ * dispatched, but there's no gaurantee. It's possible, though unlikely, that this could break in a future release of Mac OS X. */
+static void dyld_image_add_cb (const struct mach_header *mh, intptr_t vmaddr_slide) {
+    [[NSNotificationCenter defaultCenter] postNotificationName: EXPatchMasterImageDidLoadNotification object: nil];
+}
+
++ (void) initialize {
+    if (([self class] != [EXPatchMaster class]))
+        return;
+
+    /* Register the shared dyld image add function */
+    _dyld_register_func_for_add_image(dyld_image_add_cb);
 }
 
 
@@ -190,9 +244,111 @@ static BOOL ex_imp_removeBlock (IMP anImp) {
     _classPatches = [NSMutableDictionary dictionary];
     _instancePatches = [NSMutableDictionary dictionary];
     _restoreBlocks = [NSMutableArray array];
+    _pendingPatches = [NSMutableArray array];
     _lock = OS_SPINLOCK_INIT;
+    
+    /* Watch for image loads */
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleImageLoad:) name: EXPatchMasterImageDidLoadNotification object: nil];
 
     return self;
+}
+
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
+// EXPatchMasterImageDidLoadNotification notification handler
+- (void) handleImageLoad: (NSNotification *) notification {
+    NSArray *blocks;
+    OSSpinLockLock(&_lock); {
+        blocks = [_pendingPatches copy];
+    } OSSpinLockUnlock(&_lock);
+    
+    for (BOOL (^patcher)(void) in blocks) {
+        if (patcher()) {
+            OSSpinLockLock(&_lock); {
+                [_pendingPatches removeObject: patcher];
+            } OSSpinLockUnlock(&_lock);
+        }
+    }
+}
+
+/**
+ * Patch the class method @a selector of @a className, where @a className may not yet have been loaded,
+ * or @a selector may not yet have been registered by a category.
+ *
+ * This may be used to register patches that will be automatically applied when the bundle or framework
+ * to which they apply is loaded.
+ *
+ * @param className The name of the class to patch. The class may not yet have been loaded.
+ * @param selector The selector to patch.
+ * @param replacementBlock The new implementation for @a selector. The first parameter must be a pointer to EXPatchIMP; the
+ * remainder of the parameters must match the original method.
+ */
+- (void) patchFutureClassWithName: (NSString *) className selector: (SEL) selector replacementBlock: (id) replacementBlock {
+    /* Create a patch block */
+    BOOL (^patcher)(void) = ^{
+        Class cls = NSClassFromString(className);
+        if (!cls)
+            return NO;
+        
+        if (![cls respondsToSelector: selector])
+            return NO;
+        
+        /* Class and selector are registered! Patch away! */
+        return [self patchClass: cls selector: selector replacementBlock: replacementBlock];
+    };
+    
+    /* Register the patch */
+    OSSpinLockLock(&_lock); {
+        [_pendingPatches addObject: patcher];
+    } OSSpinLockUnlock(&_lock);
+    
+    /* Try immediately -- the patch may already have been viable, or the required image may have been concurrently loaded */
+    if (patcher()) {
+        OSSpinLockLock(&_lock); {
+            [_pendingPatches removeObject: patcher];
+        } OSSpinLockUnlock(&_lock);
+    }
+}
+
+/**
+ * Patch the instance method @a selector of @a className, where @a className may not yet have been loaded,
+ * or @a selector may not yet have been registered by a category.
+ *
+ * This may be used to register patches that will be automatically applied when the bundle or framework
+ * to which they apply is loaded.
+ *
+ * @param className The name of the class to patch. The class may not yet have been loaded.
+ * @param selector The selector to patch.
+ * @param replacementBlock The new implementation for @a selector. The first parameter must be a pointer to EXPatchIMP; the
+ * remainder of the parameters must match the original method.
+ */
+- (void) patchInstancesWithFutureClassName: (NSString *) className selector: (SEL) selector replacementBlock: (id) replacementBlock {
+    /* Create a patch block */
+    BOOL (^patcher)(void) = ^{
+        Class cls = NSClassFromString(className);
+        if (!cls)
+            return NO;
+
+        if (![cls instancesRespondToSelector: selector])
+            return NO;
+        
+        /* Class and selector are registered! Patch away! */
+        return [self patchInstancesWithClass: cls selector: selector replacementBlock: replacementBlock];
+    };
+    
+    /* Register the patch */
+    OSSpinLockLock(&_lock); {
+        [_pendingPatches addObject: patcher];
+    } OSSpinLockUnlock(&_lock);
+
+    /* Try immediately -- the patch may already have been viable, or the required image may have been concurrently loaded */
+    if (patcher()) {
+        OSSpinLockLock(&_lock); {
+            [_pendingPatches removeObject: patcher];
+        } OSSpinLockUnlock(&_lock);
+    }
 }
 
 /**

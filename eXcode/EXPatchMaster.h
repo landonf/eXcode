@@ -56,6 +56,9 @@ typedef struct EXPatchIMP {
 + (BOOL) ex_patchSelector: (SEL) selector withReplacementBlock: (id) replacementBlock;
 + (BOOL) ex_patchInstanceSelector: (SEL) selector withReplacementBlock: (id) replacementBlock;
 
++ (void) ex_patchFutureSelector: (SEL) selector withReplacementBlock: (id) replacementBlock;
++ (void) ex_patchFutureInstanceSelector: (SEL) selector withReplacementBlock: (id) replacementBlock;
+
 @end
 
 @interface EXPatchMaster : NSObject
@@ -64,5 +67,8 @@ typedef struct EXPatchIMP {
 
 - (BOOL) patchClass: (Class) cls selector: (SEL) selector replacementBlock: (id) replacementBlock;
 - (BOOL) patchInstancesWithClass: (Class) cls selector: (SEL) selector replacementBlock: (id) replacementBlock;
+
+- (void) patchFutureClassWithName: (NSString *) className selector: (SEL) selector replacementBlock: (id) replacementBlock;
+- (void) patchInstancesWithFutureClassName: (NSString *) className selector: (SEL) selector replacementBlock: (id) replacementBlock;
 
 @end
