@@ -17,10 +17,8 @@
 		0527064E17CDB47900E6A5D8 /* IDEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0527064D17CDB47900E6A5D8 /* IDEKit.framework */; };
 		0527064F17CDB4EA00E6A5D8 /* IDEKit.framework in Sources */ = {isa = PBXBuildFile; fileRef = 0527064D17CDB47900E6A5D8 /* IDEKit.framework */; };
 		0527065317CDB59C00E6A5D8 /* EXPreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527065217CDB59C00E6A5D8 /* EXPreferencesController.m */; };
-		0527065617CDB68C00E6A5D8 /* DVTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0527065517CDB68C00E6A5D8 /* DVTKit.framework */; };
 		0527065717CDB69800E6A5D8 /* DVTKit.framework in Sources */ = {isa = PBXBuildFile; fileRef = 0527065517CDB68C00E6A5D8 /* DVTKit.framework */; };
 		0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 0544E85617C9960100F961BD /* eXcodePlugin.m */; };
-		0556AAF117CD9C4D000A5197 /* FScript.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
 		0556AAF217CD9C59000A5197 /* FScript.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
 		055D238317D175EC0026C946 /* eXcode.xcplugindata in Resources */ = {isa = PBXBuildFile; fileRef = 055D238217D175EC0026C946 /* eXcode.xcplugindata */; };
 		055D238617D2437F0026C946 /* EXDebugMenuCommandHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 055D238517D2437F0026C946 /* EXDebugMenuCommandHandler.m */; };
@@ -28,7 +26,6 @@
 		057F636A17C991AE00406854 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 057F636817C991AE00406854 /* InfoPlist.strings */; };
 		05B12F4017D2C1B8005E497C /* IDEFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B12F3F17D2C1B8005E497C /* IDEFoundation.framework */; };
 		05B12F4117D2C1DB005E497C /* IDEFoundation.framework in Sources */ = {isa = PBXBuildFile; fileRef = 05B12F3F17D2C1B8005E497C /* IDEFoundation.framework */; };
-		05CF528D17C9AEF6009FB820 /* DevToolsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */; };
 		05CF528E17C9AF10009FB820 /* DevToolsCore.framework in Sources */ = {isa = PBXBuildFile; fileRef = 05CF528C17C9AEF6009FB820 /* DevToolsCore.framework */; };
 		05CF529217C9BB0C009FB820 /* EXLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 05CF529117C9BB0C009FB820 /* EXLog.m */; };
 		05CF529617C9BFD7009FB820 /* EXPatchMaster.m in Sources */ = {isa = PBXBuildFile; fileRef = 05CF529517C9BFD7009FB820 /* EXPatchMaster.m */; };
@@ -36,8 +33,8 @@
 		05E55C5717C9D60D00BC8510 /* PLBlockIMP.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05CF529E17C9D5C0009FB820 /* PLBlockIMP.framework */; };
 		05E55C5A17C9D79900BC8510 /* blockimp_x86_64.tramp in Sources */ = {isa = PBXBuildFile; fileRef = 05E55C5917C9D79900BC8510 /* blockimp_x86_64.tramp */; };
 		05E55C5C17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp in Sources */ = {isa = PBXBuildFile; fileRef = 05E55C5B17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp */; };
-		05EC747517D2C2B900F360BF /* DVTFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05EC747417D2C2B900F360BF /* DVTFoundation.framework */; };
 		05EC747617D2C2D900F360BF /* DVTFoundation.framework in Sources */ = {isa = PBXBuildFile; fileRef = 05EC747417D2C2B900F360BF /* DVTFoundation.framework */; };
+		05EC747717D2E55200F360BF /* FScript.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -136,14 +133,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0556AAF117CD9C4D000A5197 /* FScript.framework in Frameworks */,
+				05EC747717D2E55200F360BF /* FScript.framework in Frameworks */,
 				05CF529F17C9D5C0009FB820 /* PLBlockIMP.framework in Frameworks */,
 				057F636017C991AE00406854 /* Cocoa.framework in Frameworks */,
-				05CF528D17C9AEF6009FB820 /* DevToolsCore.framework in Frameworks */,
 				0527064E17CDB47900E6A5D8 /* IDEKit.framework in Frameworks */,
 				05B12F4017D2C1B8005E497C /* IDEFoundation.framework in Frameworks */,
-				0527065617CDB68C00E6A5D8 /* DVTKit.framework in Frameworks */,
-				05EC747517D2C2B900F360BF /* DVTFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -500,6 +494,7 @@
 					"$(DEVELOPER_DIR)/../SharedFrameworks",
 					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/Frameworks",
 					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/SharedFrameworks",
+					"/Users/landonf/Documents/Code/Plausible/excode-plugin/Dependencies",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "EX_BUILD_$(EX_BUILD_TYPE)=1";
 				INFOPLIST_FILE = "eXcode/eXcode-Info.plist";
@@ -522,6 +517,7 @@
 					"$(DEVELOPER_DIR)/../SharedFrameworks",
 					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/Frameworks",
 					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/SharedFrameworks",
+					"/Users/landonf/Documents/Code/Plausible/excode-plugin/Dependencies",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "EX_BUILD_$(EX_BUILD_TYPE)=1";
 				INFOPLIST_FILE = "eXcode/eXcode-Info.plist";
