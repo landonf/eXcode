@@ -75,9 +75,6 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     _subnodes = [NSMutableArray array];
     _interpreterWindows = [NSMutableArray array];
 
-    /* Handle unload */
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleUnloadNotification:) name: EXPluginUnloadNotification object: [NSBundle bundleForClass: [self class]]];
-
     /* View changed notification */
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleViewChangedNotification:) name: EXViewAnalyzerTargetedViewNotification object: nil];
     
@@ -113,19 +110,6 @@ static NSString *EXViewAnalyzerTargetedViewNotification = @"EXViewAnalyzerTarget
     _head = [[EXViewAnalyzerNode alloc] initWithView: [notification object]];
     [_subnodes removeAllObjects];
     [_outlineView reloadData];
-}
-
-// EXPluginUnloadNotification notification
-- (void) handleUnloadNotification: (NSNotification *) notification {
-    @autoreleasepool {
-        [_outlineView setDataSource: nil];
-        [_outlineView removeFromSuperview];
-        
-        for (NSWindow *window in _interpreterWindows)
-            [window close];
-
-        [self close];
-    }
 }
 
 - (void) dealloc {

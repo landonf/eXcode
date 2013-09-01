@@ -42,14 +42,7 @@
     if ((self = [super init]) == nil)
         return nil;
     
-    /* Handle unload */
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleUnloadNotification:) name: EXPluginUnloadNotification object: [NSBundle bundleForClass: [self class]]];
-
     return self;
-}
-
-// EXPluginUnloadNotification notification
-- (void) handleUnloadNotification: (NSNotification *) notification {
 }
 
 @end

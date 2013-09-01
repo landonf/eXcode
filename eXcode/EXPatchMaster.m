@@ -182,18 +182,6 @@ static BOOL ex_imp_removeBlock (IMP anImp) {
     return m;
 }
 
-/* Handle bundle unload */
-- (void) handleUnloadNotification: (NSNotification *) notification {
-    EXLog(@"Unloading all patches");
-    
-    /* Unpatch everything. */
-    for (void (^b)(void) in _restoreBlocks)
-        b();
-
-    /* Remove ourself as an observer. */
-    [[NSNotificationCenter defaultCenter] removeObserver: self];
-}
-
 - (instancetype) init {
     if ((self = [super init]) == nil)
         return nil;
@@ -203,9 +191,6 @@ static BOOL ex_imp_removeBlock (IMP anImp) {
     _instancePatches = [NSMutableDictionary dictionary];
     _restoreBlocks = [NSMutableArray array];
     _lock = OS_SPINLOCK_INIT;
-
-    /* Handle unload */
-    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleUnloadNotification:) name: EXPluginUnloadNotification object: [NSBundle bundleForClass: [self class]]];
 
     return self;
 }

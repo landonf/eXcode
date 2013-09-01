@@ -28,8 +28,6 @@
 
 #import <AppKit/AppKit.h>
 
-extern NSString *EXPluginUnloadNotification;
-
 @interface eXcodePlugin : NSObject
 
 
