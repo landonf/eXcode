@@ -2,6 +2,7 @@ class-dump: Version 3.4
 The following patches have been applied:
 	0001-Add-a-work-around-for-sizing-of-bitfield-elements.patch
 	Always use a bitfield type large enough for the bitfield width.
+	Reported upstream by another user in github issue #18, along with a patch.
 
 Subject to the following copyright. The source for this version i
 included in class-dump-src.
