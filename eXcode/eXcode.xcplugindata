@@ -16,7 +16,7 @@
 			<key>eXcode.CmdHandler.ViewAnalyzerMenuEntry</key>
 			<dict>
 				<key>handlerClass</key>
-				<string>EXDebugMenuCommandHandler</string>
+				<string>eXcodePlugin</string>
 				<key>id</key>
 				<string>eXcode.CmdHandler.ViewAnalyzerMenuEntry</string>
 				<key>cmdDefinition</key>
