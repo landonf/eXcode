@@ -36,33 +36,11 @@
 
 #import <mach-o/dyld.h>
 
-/* See comment in F-Script initialization below */
-@interface NSObject (private_IBUICanvasLayoutPersistence)
-+ (NSPoint) ibExternalLastKnownCanvasFrameOrigin;
-- (NSPoint) ibExternalLastKnownCanvasFrameOrigin;
-@end
 
-/* Inject F-Script menu
- *
- * Xcode's IDEInterfaceBuilderCocoaTouchIntegration includes an NSObject category that registers
- * an assortment of ib-related methods for abstract methods, and then triggers non-exception-based
- * abort() when they are called. This triggers a crash when F-Script introspects defined object
- * properties. This ugly hack works around the issue; we can re-evaluate this in favor for a more
- * surgical approach at later date.
- */
-void fscript_patch_dyld_added_image (const struct mach_header* mh, intptr_t vmaddr_slide) {
-    if ([NSObject instancesRespondToSelector: @selector(ibExternalLastKnownCanvasFrameOrigin)]) {
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            [NSObject ex_patchSelector: @selector(ibExternalLastKnownCanvasFrameOrigin) withReplacementBlock: ^(EXPatchIMP *patch) { return NSZeroPoint; }];
-            [NSObject ex_patchInstanceSelector: @selector(ibExternalLastKnownCanvasFrameOrigin) withReplacementBlock: ^(EXPatchIMP *patch) { return NSZeroPoint; }];
-        });
-    }
-}
+
 
 @implementation eXcodePlugin {
-    EXViewAnalyzerWindowController *_analyzerWindowController;
-    FScriptMenuItem *_fscriptMenu;
+@private
 }
 
 - (id) init {
@@ -70,32 +48,8 @@ void fscript_patch_dyld_added_image (const struct mach_header* mh, intptr_t vmad
         return nil;
     
     EXLog(@"Plugin loaded; starting up ...");
-    
-#if EX_BUILD_DEBUG
-    /* Fire up the analyzer window */
-    _analyzerWindowController = [[EXViewAnalyzerWindowController alloc] init];
-    [_analyzerWindowController showWindow: nil];
-#endif
-
-    /* To fix an F-Script compatibility issue, we need to patch NSObject the
-     * IDEInterfaceBuilderCocoaTouchIntegration image is loaded */
-    _dyld_register_func_for_add_image(fscript_patch_dyld_added_image);
-
-    // XXX - Our menu is being dropped if we instantiate it immediately
-    // We probably need to plug into the Xcode menu system correctly, but in the mean time, this drops F-Script
-    // into place.
-    double delayInSeconds = 5.0;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        _fscriptMenu = [[FScriptMenuItem alloc] init];
-        [[NSApp mainMenu] addItem: _fscriptMenu];
-    });
 
     return self;
-}
-
-- (void) dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 @end

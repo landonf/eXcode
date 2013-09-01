@@ -13,29 +13,29 @@
 	<dict>
 		<key>extensions</key>
 		<dict>
-			<key>eXcode.CmdHandler.ExampleDebugMenuEntry</key>
+			<key>eXcode.CmdHandler.ViewAnalyzerMenuEntry</key>
 			<dict>
 				<key>handlerClass</key>
 				<string>EXDebugMenuCommandHandler</string>
 				<key>id</key>
-				<string>eXcode.CmdHandler.ExampleDebugMenuEntry</string>
+				<string>eXcode.CmdHandler.ViewAnalyzerMenuEntry</string>
 				<key>cmdDefinition</key>
-				<string>eXcode.CmdDefinition.ExampleDebugMenuEntry</string>
+				<string>eXcode.CmdDefinition.ViewAnalyzerMenuEntry</string>
 				<key>name</key>
-				<string>Add Ancestor to Comparison Command Handler</string>
+				<string>Show View Analyzer Command Handler</string>
 				<key>point</key>
 				<string>Xcode.IDEKit.CmdHandler</string>
 				<key>version</key>
 				<string>0.1</string>
 			</dict>
-			<key>eXcode.DebugMenuItemDefinition.ExampleDebugMenuEntry</key>
+			<key>eXcode.DebugMenuItemDefinition.ViewAnalyzerMenuEntry</key>
 			<dict>
 				<key>name</key>
 				<string>Example Debug Menu Item</string>
 				<key>id</key>
-				<string>eXcode.DebugMenuItemDefinition.ExampleDebugMenuEntry</string>
+				<string>eXcode.DebugMenuItemDefinition.ViewAnalyzerMenuEntry</string>
 				<key>commandIdentifier</key>
-				<string>eXcode.CmdDefinition.ExampleDebugMenuEntry</string>
+				<string>eXcode.CmdDefinition.ViewAnalyzerMenuEntry</string>
 				<key>type</key>
 				<string>command</string>
 				<key>point</key>
@@ -46,19 +46,19 @@
 			<key>eXcode.CmdDefinition.ExampleDebugMenuEntry</key>
 			<dict>
 				<key>action</key>
-				<string>exampleDebugMenuEntry:</string>
+				<string>enableViewAnalyzer:</string>
 				<key>id</key>
-				<string>eXcode.CmdDefinition.ExampleDebugMenuEntry</string>
+				<string>eXcode.CmdDefinition.ViewAnalyzerMenuEntry</string>
 				<key>point</key>
 				<string>Xcode.IDEKit.CmdDefinition</string>
 				<key>title</key>
-				<string>Frobulate the Xcode Spiffinator</string>
+				<string>Show View Analyzer</string>
 				<key>menuItem</key>
 				<array/>
 				<key>version</key>
 				<string>0.1</string>
 				<key>name</key>
-				<string>Frobulate the Xcode Spiffinator</string>
+				<string>Show View Analyzer</string>
 			</dict>
 		</dict>
 		<key>extension-points</key>
