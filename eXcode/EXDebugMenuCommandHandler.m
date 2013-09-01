@@ -79,13 +79,10 @@
 
 // eXcode.CmdHandler.ViewAnalyzerMenuEntry handler.
 - (void) enableViewAnalyzer: (id) sender {
-#if EX_BUILD_DEBUG
     /* Fire up the analyzer window */
     if (_analyzerWindowController == nil)
         _analyzerWindowController = [[EXViewAnalyzerWindowController alloc] init];
     [_analyzerWindowController showWindow: nil];
-#endif
-    
     
     /*
      * F-Script compatibility patches
