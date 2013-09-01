@@ -29,6 +29,9 @@
 #import "eXcodePlugin.h"
 #import "EXLog.h"
 
+#import "DVTFoundation/header-stamp.h" // Xcode dependency hack
+#import "DVTFoundation/DVTPlugInManager.h"
+
 #import "DevToolsCore/header-stamp.h" // Xcode dependency hack
 #import "DevToolsCore/XCPluginManager.h"
 
