@@ -46,6 +46,11 @@
     EXViewAnalyzerWindowController *_analyzerWindowController;
 }
 
+// force loading of the plugin class upon bundle load
++ (void) load {
+    [self defaultPlugin];
+}
+
 /**
  * Return the default plugin instance.
  */
