@@ -1,0 +1,60 @@
+From 4876e051120f955c86f233ccec22103cc5c055e5 Mon Sep 17 00:00:00 2001
+From: Landon Fuller <landonf@bikemonkey.org>
+Date: Sat, 31 Aug 2013 21:12:09 -0400
+Subject: [PATCH] Add a work-around for sizing of bitfield elements.
+
+This avoids compilation issues due to the bitfield type being too small
+to hold a large bitfield (eg, int field:62 exeeds the capacity of int).
+
+Ideally we could determine and output the actual field type; this
+appears to be impossible with the NeXT bitfield type encoding. The NeXT
+encoding does not include a type for the actual field, and the field
+type can not be surmised by summing the total width of consecutive
+fields and rounding to the nearest power of two; there's nothing
+that would prevent (for example) specification of a bitfield that was
+15 bits long, but with 64 bits total reserved.
+
+The GNU runtime adopted a new encoding for bitfields of
+b<type><bitsize>, but unfortunately, this is not used in Apple's
+runtime.
+
+As such, this will allow headers generated with large bitfields to still
+be used, but they may reflect inaccurate structure sizes and member
+layout.
+---
+ Source/CDType.m | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/Source/CDType.m b/Source/CDType.m
+index d344b64..84d050f 100644
+--- a/Source/CDType.m
++++ b/Source/CDType.m
+@@ -321,13 +321,22 @@ static BOOL debugMerge = NO;
+             }
+             break;
+             
+-        case 'b':
++        case 'b': {
++            /* The NeXT bitfield encoding does not contain enough data to determine
++             * the actual type of bitfield element. We assume an int, unless the size
++             * exceeds 32-bits; this will allow the generated code to compile, even
++             * if the size of the enclosing structure is incorrect. */
++            NSString *type = @"int";
++            if ([_bitfieldSize intValue] > 32)
++                type = @"long long int";
++
+             if (currentName == nil) {
+                 // This actually compiles!
+-                result = [NSString stringWithFormat:@"unsigned int :%@", _bitfieldSize];
++                result = [NSString stringWithFormat:@"unsigned %@ :%@", type, _bitfieldSize];
+             } else
+-                result = [NSString stringWithFormat:@"unsigned int %@:%@", currentName, _bitfieldSize];
++                result = [NSString stringWithFormat:@"unsigned %@ %@:%@", type, currentName, _bitfieldSize];
+             break;
++        }
+             
+         case '[':
+             if (currentName == nil)
+-- 
+1.8.3.4 (Apple Git-47)
+

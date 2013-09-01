@@ -1,7 +1,10 @@
 class-dump: Version 3.4
+The following patches have been applied:
+	0001-Add-a-work-around-for-sizing-of-bitfield-elements.patch
+	Always use a bitfield type large enough for the bitfield width.
 
-Subject to the following copyright. The source for this version is unmodified,
-and is included in this same directory.
+Subject to the following copyright. The source for this version i
+included in class-dump-src.
 
 Copyright (C) 1997-1998, 2000-2001, 2004-2012 Steve Nygard.
 
