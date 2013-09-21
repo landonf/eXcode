@@ -16,7 +16,7 @@
 		0527064817CD94B800E6A5D8 /* EXUniversalBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527064517CD94B800E6A5D8 /* EXUniversalBinary.m */; };
 		0527064E17CDB47900E6A5D8 /* IDEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0527064D17CDB47900E6A5D8 /* IDEKit.framework */; };
 		0527064F17CDB4EA00E6A5D8 /* IDEKit.framework in Sources */ = {isa = PBXBuildFile; fileRef = 0527064D17CDB47900E6A5D8 /* IDEKit.framework */; };
-		0527065317CDB59C00E6A5D8 /* EXPreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527065217CDB59C00E6A5D8 /* EXPreferencesController.m */; };
+		0527065317CDB59C00E6A5D8 /* EXPreferencesPaneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0527065217CDB59C00E6A5D8 /* EXPreferencesPaneController.m */; };
 		0527065717CDB69800E6A5D8 /* DVTKit.framework in Sources */ = {isa = PBXBuildFile; fileRef = 0527065517CDB68C00E6A5D8 /* DVTKit.framework */; };
 		0544E85717C9960100F961BD /* eXcodePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 0544E85617C9960100F961BD /* eXcodePlugin.m */; };
 		0556AAF217CD9C59000A5197 /* FScript.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
@@ -34,6 +34,7 @@
 		05E55C5C17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp in Sources */ = {isa = PBXBuildFile; fileRef = 05E55C5B17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp */; };
 		05EC747617D2C2D900F360BF /* DVTFoundation.framework in Sources */ = {isa = PBXBuildFile; fileRef = 05EC747417D2C2B900F360BF /* DVTFoundation.framework */; };
 		05EC747717D2E55200F360BF /* FScript.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
+		05EC747917D3036B00F360BF /* EXPreferencesPaneIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 05EC747817D3036B00F360BF /* EXPreferencesPaneIcon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -94,8 +95,8 @@
 		0527064517CD94B800E6A5D8 /* EXUniversalBinary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXUniversalBinary.m; sourceTree = "<group>"; };
 		0527064C17CD95B900E6A5D8 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = SOURCE_ROOT; };
 		0527064D17CDB47900E6A5D8 /* IDEKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IDEKit.framework; path = ../Frameworks/IDEKit.framework; sourceTree = DEVELOPER_DIR; };
-		0527065117CDB59C00E6A5D8 /* EXPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXPreferencesController.h; sourceTree = "<group>"; };
-		0527065217CDB59C00E6A5D8 /* EXPreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXPreferencesController.m; sourceTree = "<group>"; };
+		0527065117CDB59C00E6A5D8 /* EXPreferencesPaneController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXPreferencesPaneController.h; sourceTree = "<group>"; };
+		0527065217CDB59C00E6A5D8 /* EXPreferencesPaneController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXPreferencesPaneController.m; sourceTree = "<group>"; };
 		0527065517CDB68C00E6A5D8 /* DVTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DVTKit.framework; path = ../SharedFrameworks/DVTKit.framework; sourceTree = DEVELOPER_DIR; };
 		0544E85517C9960100F961BD /* eXcodePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eXcodePlugin.h; sourceTree = "<group>"; };
 		0544E85617C9960100F961BD /* eXcodePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eXcodePlugin.m; sourceTree = "<group>"; };
@@ -123,6 +124,7 @@
 		05E55C5B17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = blockimp_x86_64_stret.tramp; sourceTree = "<group>"; };
 		05E55C5D17C9D96C00BC8510 /* EXBlockLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EXBlockLayout.h; sourceTree = "<group>"; };
 		05EC747417D2C2B900F360BF /* DVTFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DVTFoundation.framework; path = ../SharedFrameworks/DVTFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		05EC747817D3036B00F360BF /* EXPreferencesPaneIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EXPreferencesPaneIcon.png; path = ../../../../../Desktop/EXPreferencesPaneIcon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,8 +173,9 @@
 		0527065017CDB58800E6A5D8 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
-				0527065117CDB59C00E6A5D8 /* EXPreferencesController.h */,
-				0527065217CDB59C00E6A5D8 /* EXPreferencesController.m */,
+				05EC747817D3036B00F360BF /* EXPreferencesPaneIcon.png */,
+				0527065117CDB59C00E6A5D8 /* EXPreferencesPaneController.h */,
+				0527065217CDB59C00E6A5D8 /* EXPreferencesPaneController.m */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -344,6 +347,7 @@
 				055D238317D175EC0026C946 /* eXcode.xcplugindata in Resources */,
 				057F636A17C991AE00406854 /* InfoPlist.strings in Resources */,
 				0527062E17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib in Resources */,
+				05EC747917D3036B00F360BF /* EXPreferencesPaneIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,7 +369,7 @@
 				0527064617CD94B800E6A5D8 /* EXExecutableBinary.m in Sources */,
 				0527064717CD94B800E6A5D8 /* EXMachO.m in Sources */,
 				0527064817CD94B800E6A5D8 /* EXUniversalBinary.m in Sources */,
-				0527065317CDB59C00E6A5D8 /* EXPreferencesController.m in Sources */,
+				0527065317CDB59C00E6A5D8 /* EXPreferencesPaneController.m in Sources */,
 				0527064F17CDB4EA00E6A5D8 /* IDEKit.framework in Sources */,
 				05B12F4117D2C1DB005E497C /* IDEFoundation.framework in Sources */,
 				05CF528E17C9AF10009FB820 /* DevToolsCore.framework in Sources */,

@@ -60,6 +60,25 @@
 				<key>name</key>
 				<string>Show View Analyzer</string>
 			</dict>
+			<key>eXcode.TextEditingPrefPane</key>
+			<dict>
+				<key>disableResize</key>
+				<string>true</string>
+				<key>id</key>
+				<string>eXcode.TextEditingPrefPane</string>
+				<key>point</key>
+				<string>Xcode.PreferencePane</string>
+				<key>title</key>
+				<string>eXcode</string>
+				<key>image</key>
+				<string>EXPreferencesPaneIcon</string>
+				<key>version</key>
+				<string>0.1</string>
+				<key>controllerClass</key>
+				<string>EXPreferencesPaneController</string>
+				<key>name</key>
+				<string>eXcode Preferences Pane</string>
+			</dict>
 		</dict>
 		<key>extension-points</key>
 		<dict/>

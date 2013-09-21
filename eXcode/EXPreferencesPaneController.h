@@ -26,23 +26,15 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import "EXPreferencesController.h"
+#import <AppKit/AppKit.h>
 
-#import "eXcodePlugin.h"
+#import "DVTKit/header-stamp.h" // Xcode dependency hack
+#import "DVTKit/DVTViewController.h"
 
 #import "IDEKit/header-stamp.h" // Xcode dependency hack
-#import "IDEKit/IDEPreferencesController.h"
+#import "IDEKit/IDEWorkspaceDocumentProvider.h"
+#import "IDEKit/IDEViewController.h"
 
-/**
- * Manages instantiation of the EX preferences.
- */
-@implementation EXPreferencesController
-
-- (id) init {
-    if ((self = [super init]) == nil)
-        return nil;
-    
-    return self;
-}
+@interface EXPreferencesPaneController : NSObject
 
 @end

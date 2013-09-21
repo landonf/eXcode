@@ -26,8 +26,23 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import <Foundation/Foundation.h>
+#import "EXPreferencesPaneController.h"
 
-@interface EXPreferencesController : NSObject
+#import "eXcodePlugin.h"
+
+#import "IDEKit/header-stamp.h" // Xcode dependency hack
+#import "IDEKit/IDEPreferencesController.h"
+
+/**
+ * Manages instantiation of the EX preferences.
+ */
+@implementation EXPreferencesPaneController
+
+- (id) init {
+    if ((self = [super init]) == nil)
+        return nil;
+    
+    return self;
+}
 
 @end
