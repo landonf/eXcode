@@ -34,7 +34,6 @@
 		05E55C5C17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp in Sources */ = {isa = PBXBuildFile; fileRef = 05E55C5B17C9D7AE00BC8510 /* blockimp_x86_64_stret.tramp */; };
 		05EC747617D2C2D900F360BF /* DVTFoundation.framework in Sources */ = {isa = PBXBuildFile; fileRef = 05EC747417D2C2B900F360BF /* DVTFoundation.framework */; };
 		05EC747717D2E55200F360BF /* FScript.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0556AAF017CD9C4D000A5197 /* FScript.framework */; };
-		05EC747917D3036B00F360BF /* EXPreferencesPaneIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 05EC747817D3036B00F360BF /* EXPreferencesPaneIcon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -47,7 +46,7 @@
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(CURRENT_ARCH)/$(INPUT_FILE_BASE)/header-stamp.h",
 			);
-			script = "DEST=\"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}\"\nSTAMP=\"${DEST}/header-stamp.h\"\nif [ \"${STAMP}\" -nt \"${INPUT_FILE_PATH}\" ]; then\n    exit 0\nfi\n\nmkdir -p \"${DEST}\"\n${SRCROOT}/bin/class-dump --arch \"${CURRENT_ARCH}\" -H \"${INPUT_FILE_PATH}\" -o \"${DEST}\"\n\n# Special case objects/protocols that are otherwise redefined.\n# We may be able to handle this better by finding the implementing framework for a symbol\n# and checking for a valid header; in the meantime, this works without too much hassle.\nis_cocoa() {\n    case \"$1\" in\n        NSObject) echo 1;;\n        NSToolbarDelegate) echo 1;;\n        NSWindowRestoration) echo 1;;\n        *) echo 0;;\n    esac\n}\n\npushd \"${DEST}\" >/dev/null\n# Fix up any bad method names\nfor f in *.h; do\n    sed 's/\\.cxx_destruct/_cxx_destruct/g' < \"${f}\" > \"${f}.new\"\n    mv \"${f}.new\" \"${f}\"\ndone\n\n# Generate stub headers for any missing headers\nfor f in `grep -h -E '^#import[ \\t.*]\"' *.h | sort | uniq  | cut -f 2 -d ' ' | awk -F \\\" '{print $2}'`; do\n    if [ ! -f \"${f}\" ]; then\n        base=$(echo \"$f\" | sed 's/\\.h$//g')\n        if [ \"$(is_cocoa ${base})\" = 1 ]; then\n            echo '#import <Cocoa/Cocoa.h>' > \"${f}\"\n        elif [ -f \"${base}-Protocol.h\" ]; then\n            echo \"#import \\\"${base}-Protocol.h\\\"\" > \"${f}\"\n        else\n            # Try to find a working header ...\n            echo '#import <Cocoa/Cocoa.h>' > \"${f}\"\n        fi\n    fi\ndone\npopd >/dev/null\n\ntouch \"${STAMP}\"";
+			script = "DEST=\"${DERIVED_FILES_DIR}/${CURRENT_ARCH}/${INPUT_FILE_BASE}\"\nSTAMP=\"${DEST}/header-stamp.h\"\nif [ \"${STAMP}\" -nt \"${INPUT_FILE_PATH}\" ]; then\n    exit 0\nfi\n\nmkdir -p \"${DEST}\"\n${SRCROOT}/bin/class-dump --arch \"${CURRENT_ARCH}\" -H \"${INPUT_FILE_PATH}\" -o \"${DEST}\"\n\n# Special case objects/protocols that are otherwise redefined.\n# We may be able to handle this better by finding the implementing framework for a symbol\n# and checking for a valid header; in the meantime, this works without too much hassle.\nis_cocoa() {\n    case \"$1\" in\n        NSObject) echo 1;;\n        NSToolbarDelegate) echo 1;;\n        NSWindowRestoration) echo 1;;\n        *) echo 0;;\n    esac\n}\n\npushd \"${DEST}\" >/dev/null\n# Apply our one-off header fixups\nfor f in *.h; do\n    sed -e 's/- (void)\\.cxx_destruct//g' \\\n        -e 's/@property(readonly) unsigned long long hash;//' \\\n        -e 's/@property(retain) DVTControllerContentView \\*view;//' \\\n        -e 's/- (void)setStateToken:(id)arg1;//' < \"${f}\" > \"${f}.new\"\n    mv \"${f}.new\" \"${f}\"\ndone\n\n# Generate stub headers for any missing headers\nfor f in `grep -h -E '^#import[ \\t.*]\"' *.h | sort | uniq  | cut -f 2 -d ' ' | awk -F \\\" '{print $2}'`; do\n    if [ ! -f \"${f}\" ]; then\n        base=$(echo \"$f\" | sed 's/\\.h$//g')\n        if [ \"$(is_cocoa ${base})\" = 1 ]; then\n            echo '#import <Cocoa/Cocoa.h>' > \"${f}\"\n        elif [ -f \"${base}-Protocol.h\" ]; then\n            echo \"#import \\\"${base}-Protocol.h\\\"\" > \"${f}\"\n        else\n            # Try to find a working header ...\n            echo '#import <Cocoa/Cocoa.h>' > \"${f}\"\n        fi\n    fi\ndone\npopd >/dev/null\n\ntouch \"${STAMP}\"";
 		};
 		05E55C5817C9D6FA00BC8510 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -116,7 +115,6 @@
 		05CF529417C9BFD7009FB820 /* EXPatchMaster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXPatchMaster.h; sourceTree = "<group>"; };
 		05CF529517C9BFD7009FB820 /* EXPatchMaster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXPatchMaster.m; sourceTree = "<group>"; };
 		05CF529817C9D159009FB820 /* class-dump */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "class-dump"; sourceTree = "<group>"; };
-		05CF529917C9D159009FB820 /* class-dump-3.4.tar.bz2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "class-dump-3.4.tar.bz2"; sourceTree = "<group>"; };
 		05CF529A17C9D159009FB820 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05CF529D17C9D586009FB820 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05CF529E17C9D5C0009FB820 /* PLBlockIMP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PLBlockIMP.framework; sourceTree = "<group>"; };
@@ -274,7 +272,6 @@
 			isa = PBXGroup;
 			children = (
 				05CF529817C9D159009FB820 /* class-dump */,
-				05CF529917C9D159009FB820 /* class-dump-3.4.tar.bz2 */,
 				05CF529A17C9D159009FB820 /* README.txt */,
 			);
 			path = bin;
@@ -347,7 +344,6 @@
 				055D238317D175EC0026C946 /* eXcode.xcplugindata in Resources */,
 				057F636A17C991AE00406854 /* InfoPlist.strings in Resources */,
 				0527062E17CA90C800E6A5D8 /* EXViewAnalyzerWindowController.xib in Resources */,
-				05EC747917D3036B00F360BF /* EXPreferencesPaneIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -490,8 +486,6 @@
 					"$(DEVELOPER_DIR)/../Frameworks",
 					"$(DEVELOPER_DIR)/../OtherFrameworks",
 					"$(DEVELOPER_DIR)/../SharedFrameworks",
-					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/Frameworks",
-					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/SharedFrameworks",
 					"/Users/landonf/Documents/Code/Plausible/excode-plugin/Dependencies",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "EX_BUILD_$(EX_BUILD_TYPE)=1";
@@ -513,8 +507,6 @@
 					"$(DEVELOPER_DIR)/../Frameworks",
 					"$(DEVELOPER_DIR)/../OtherFrameworks",
 					"$(DEVELOPER_DIR)/../SharedFrameworks",
-					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/Frameworks",
-					"$(SYSTEM_APPS_DIR)/Xcode5-DP6.app/Contents/SharedFrameworks",
 					"/Users/landonf/Documents/Code/Plausible/excode-plugin/Dependencies",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "EX_BUILD_$(EX_BUILD_TYPE)=1";
